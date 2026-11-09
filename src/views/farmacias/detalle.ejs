@@ -1,0 +1,22 @@
+<%- include('../partials/encabezado', { titulo: farmacia.nombre }) %>
+    <h1><%= farmacia.nombre %></h1>
+    <p class="subtitulo">Detalle de la farmacia.</p>
+    <% if (mensaje) { %><div class="alerta exito"><%= mensaje %></div><% } %>
+    <div class="tarjeta">
+      <dl class="detalle">
+        <div><dt>NIT</dt><dd><%= farmacia.nit %></dd></div>
+        <div><dt>Responsable</dt><dd><%= farmacia.responsable || 'No registrado' %></dd></div>
+        <div><dt>Teléfono</dt><dd><%= farmacia.telefono %></dd></div>
+        <div><dt>Zona</dt><dd><%= farmacia.zona %></dd></div>
+        <div><dt>Dirección</dt><dd><%= farmacia.direccion %></dd></div>
+        <div><dt>Fecha de registro</dt><dd><%= farmacia.fecha_registro %></dd></div>
+      </dl>
+      <div class="acciones">
+        <a class="boton" href="/farmacias/<%= farmacia.id_farmacia %>/editar">Editar</a>
+        <form method="post" action="/farmacias/<%= farmacia.id_farmacia %>/desactivar" onsubmit="return confirm('¿Desea desactivar esta farmacia? Su historial de pedidos se conserva.');">
+          <button class="boton peligro" type="submit">Desactivar</button>
+        </form>
+        <a class="boton secundario" href="/farmacias">Volver al listado</a>
+      </div>
+    </div>
+<%- include('../partials/pie') %>

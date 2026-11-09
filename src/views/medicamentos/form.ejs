@@ -1,0 +1,50 @@
+<% const esNuevo = modo === 'nuevo'; %>
+<%- include('../partials/encabezado', { titulo: esNuevo ? 'Registrar medicamento' : 'Editar medicamento' }) %>
+    <h1><%= esNuevo ? 'Registrar medicamento' : 'Editar medicamento' %></h1>
+    <p class="subtitulo">Los campos marcados con <span class="obligatorio">*</span> son obligatorios.</p>
+    <% if (Object.keys(errores).length > 0) { %>
+      <div class="alerta error">Revise los campos marcados antes de guardar.</div>
+    <% } %>
+    <div class="tarjeta">
+      <form method="post" action="<%= esNuevo ? '/medicamentos' : '/medicamentos/' + medicamento.id_medicamento + '/editar' %>" novalidate>
+        <div class="fila">
+          <div class="campo<%= errores.nombre ? ' error' : '' %>">
+            <label for="nombre">Nombre <span class="obligatorio">*</span></label>
+            <input id="nombre" name="nombre" maxlength="100" value="<%= medicamento.nombre || '' %>">
+            <% if (errores.nombre) { %><div class="mensaje-error"><%= errores.nombre %></div><% } %>
+          </div>
+          <div class="campo<%= errores.presentacion ? ' error' : '' %>">
+            <label for="presentacion">Presentación <span class="obligatorio">*</span></label>
+            <input id="presentacion" name="presentacion" maxlength="80" value="<%= medicamento.presentacion || '' %>" placeholder="Ejemplo: Caja x 100 tabletas">
+            <% if (errores.presentacion) { %><div class="mensaje-error"><%= errores.presentacion %></div><% } %>
+          </div>
+        </div>
+        <div class="fila">
+          <div class="campo<%= errores.id_categoria ? ' error' : '' %>">
+            <label for="id_categoria">Categoría <span class="obligatorio">*</span></label>
+            <select id="id_categoria" name="id_categoria">
+              <option value="">Seleccione...</option>
+              <% categorias.forEach(c => { %><option value="<%= c.id_categoria %>"<%= Number(medicamento.id_categoria) === c.id_categoria ? ' selected' : '' %>><%= c.nombre %></option><% }) %>
+            </select>
+            <% if (errores.id_categoria) { %><div class="mensaje-error"><%= errores.id_categoria %></div><% } %>
+          </div>
+          <div class="campo<%= errores.precio_mayorista ? ' error' : '' %>">
+            <label for="precio_mayorista">Precio mayorista (Bs) <span class="obligatorio">*</span></label>
+            <input id="precio_mayorista" name="precio_mayorista" value="<%= medicamento.precio_mayorista ?? '' %>">
+            <% if (errores.precio_mayorista) { %><div class="mensaje-error"><%= errores.precio_mayorista %></div><% } %>
+          </div>
+        </div>
+        <div class="fila">
+          <div class="campo<%= errores.stock ? ' error' : '' %>">
+            <label for="stock">Stock <span class="obligatorio">*</span></label>
+            <input id="stock" name="stock" value="<%= medicamento.stock ?? '' %>">
+            <% if (errores.stock) { %><div class="mensaje-error"><%= errores.stock %></div><% } else { %><div class="ayuda">Cantidad en unidades de la presentación.</div><% } %>
+          </div>
+        </div>
+        <div class="acciones">
+          <button class="boton" type="submit">Guardar</button>
+          <a class="boton secundario" href="<%= esNuevo ? '/medicamentos' : '/medicamentos/' + medicamento.id_medicamento %>">Cancelar</a>
+        </div>
+      </form>
+    </div>
+<%- include('../partials/pie') %>

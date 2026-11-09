@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title><%= titulo %> - Sistema de Pedidos Mayoristas</title>
+<link rel="stylesheet" href="/css/estilos.css">
+</head>
+<body>
+<header class="encabezado">
+  <div class="marca">Laboratorio Químico Delta <span>Sistema de Pedidos Mayoristas</span></div>
+  <div class="usuario">Versión de desarrollo (Actividad 2)</div>
+</header>
+<div class="contenedor">
+  <nav class="menu">
+    <a href="/"<%- rutaActual === '/' ? ' class="activo"' : '' %>>Inicio</a>
+    <div class="grupo">Ventas</div>
+    <a href="/farmacias"<%- rutaActual.startsWith('/farmacias') ? ' class="activo"' : '' %>>Farmacias</a>
+    <div class="grupo">Catálogo</div>
+    <a href="/medicamentos"<%- rutaActual.startsWith('/medicamentos') ? ' class="activo"' : '' %>>Medicamentos</a>
+  </nav>
+  <main class="contenido">

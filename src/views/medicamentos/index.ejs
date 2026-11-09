@@ -1,0 +1,39 @@
+<%- include('../partials/encabezado', { titulo: 'Medicamentos' }) %>
+    <h1>Medicamentos</h1>
+    <p class="subtitulo">Catálogo de medicamentos activos con precio mayorista y stock.</p>
+    <% if (mensaje) { %><div class="alerta exito"><%= mensaje %></div><% } %>
+    <div class="barra">
+      <form method="get" action="/medicamentos">
+        <select name="categoria">
+          <option value="">Todas las categorías</option>
+          <% categorias.forEach(c => { %><option value="<%= c.id_categoria %>"<%= idCategoria === c.id_categoria ? ' selected' : '' %>><%= c.nombre %></option><% }) %>
+        </select>
+        <button class="boton secundario" type="submit">Filtrar</button>
+      </form>
+      <a class="boton" href="/medicamentos/nuevo">Nuevo medicamento</a>
+    </div>
+    <% if (medicamentos.length === 0) { %>
+      <div class="alerta aviso">No hay medicamentos activos para mostrar.</div>
+    <% } else { %>
+    <table>
+      <tr><th>Nombre</th><th>Presentación</th><th>Categoría</th><th class="numero">Precio mayorista (Bs)</th><th class="numero">Stock</th><th>Acciones</th></tr>
+      <% medicamentos.forEach(m => { %>
+      <tr>
+        <td><%= m.nombre %></td>
+        <td><%= m.presentacion %></td>
+        <td><%= m.categoria %></td>
+        <td class="numero"><%= m.precio_mayorista.toFixed(2) %></td>
+        <td class="numero"><%= m.stock %></td>
+        <td class="acciones">
+          <a class="boton chico secundario" href="/medicamentos/<%= m.id_medicamento %>">Ver</a>
+          <a class="boton chico secundario" href="/medicamentos/<%= m.id_medicamento %>/editar">Editar</a>
+          <form method="post" action="/medicamentos/<%= m.id_medicamento %>/desactivar" onsubmit="return confirm('¿Desea desactivar este medicamento?');">
+            <button class="boton chico peligro" type="submit">Desactivar</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </table>
+    <div class="paginacion"><span><%= medicamentos.length %> medicamento(s) activo(s)</span></div>
+    <% } %>
+<%- include('../partials/pie') %>

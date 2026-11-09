@@ -1,0 +1,19 @@
+{
+  "name": "sistema-pedidos-delta",
+  "version": "0.2.0",
+  "description": "Sistema web de pedidos mayoristas para el Laboratorio Químico Delta (proyecto académico, escenario ficticio)",
+  "main": "src/app.js",
+  "scripts": {
+    "start": "node src/app.js",
+    "dev": "node --watch src/app.js"
+  },
+  "author": "Gustavo Rodriguez",
+  "license": "UNLICENSED",
+  "private": true,
+  "dependencies": {
+    "dotenv": "^18.0.9",
+    "ejs": "^7.0.2",
+    "express": "^4.22.3",
+    "mysql2": "^3.24.6"
+  }
+}

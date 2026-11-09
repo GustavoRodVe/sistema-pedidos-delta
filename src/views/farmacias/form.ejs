@@ -1,0 +1,55 @@
+<% const esNueva = modo === 'nueva'; %>
+<%- include('../partials/encabezado', { titulo: esNueva ? 'Registrar farmacia' : 'Editar farmacia' }) %>
+    <h1><%= esNueva ? 'Registrar farmacia' : 'Editar farmacia' %></h1>
+    <p class="subtitulo">Los campos marcados con <span class="obligatorio">*</span> son obligatorios.</p>
+    <% if (Object.keys(errores).length > 0) { %>
+      <div class="alerta error">Revise los campos marcados antes de guardar.</div>
+    <% } %>
+    <div class="tarjeta">
+      <form method="post" action="<%= esNueva ? '/farmacias' : '/farmacias/' + farmacia.id_farmacia + '/editar' %>" novalidate>
+        <div class="fila">
+          <div class="campo<%= errores.nombre ? ' error' : '' %>">
+            <label for="nombre">Nombre <span class="obligatorio">*</span></label>
+            <input id="nombre" name="nombre" maxlength="100" value="<%= farmacia.nombre || '' %>">
+            <% if (errores.nombre) { %><div class="mensaje-error"><%= errores.nombre %></div><% } %>
+          </div>
+          <div class="campo<%= errores.nit ? ' error' : '' %>">
+            <label for="nit">NIT <span class="obligatorio">*</span></label>
+            <input id="nit" name="nit" maxlength="20" value="<%= farmacia.nit || '' %>">
+            <% if (errores.nit) { %><div class="mensaje-error"><%= errores.nit %></div><% } %>
+          </div>
+        </div>
+        <div class="fila">
+          <div class="campo<%= errores.responsable ? ' error' : '' %>">
+            <label for="responsable">Responsable</label>
+            <input id="responsable" name="responsable" maxlength="100" value="<%= farmacia.responsable || '' %>">
+            <% if (errores.responsable) { %><div class="mensaje-error"><%= errores.responsable %></div><% } %>
+          </div>
+          <div class="campo<%= errores.telefono ? ' error' : '' %>">
+            <label for="telefono">Teléfono <span class="obligatorio">*</span></label>
+            <input id="telefono" name="telefono" maxlength="20" value="<%= farmacia.telefono || '' %>">
+            <% if (errores.telefono) { %><div class="mensaje-error"><%= errores.telefono %></div><% } %>
+          </div>
+        </div>
+        <div class="fila">
+          <div class="campo<%= errores.direccion ? ' error' : '' %>">
+            <label for="direccion">Dirección <span class="obligatorio">*</span></label>
+            <input id="direccion" name="direccion" maxlength="150" value="<%= farmacia.direccion || '' %>">
+            <% if (errores.direccion) { %><div class="mensaje-error"><%= errores.direccion %></div><% } %>
+          </div>
+          <div class="campo<%= errores.zona ? ' error' : '' %>">
+            <label for="zona">Zona <span class="obligatorio">*</span></label>
+            <select id="zona" name="zona">
+              <option value="">Seleccione...</option>
+              <% zonas.forEach(z => { %><option value="<%= z %>"<%= farmacia.zona === z ? ' selected' : '' %>><%= z %></option><% }) %>
+            </select>
+            <% if (errores.zona) { %><div class="mensaje-error"><%= errores.zona %></div><% } %>
+          </div>
+        </div>
+        <div class="acciones">
+          <button class="boton" type="submit">Guardar</button>
+          <a class="boton secundario" href="<%= esNueva ? '/farmacias' : '/farmacias/' + farmacia.id_farmacia %>">Cancelar</a>
+        </div>
+      </form>
+    </div>
+<%- include('../partials/pie') %>

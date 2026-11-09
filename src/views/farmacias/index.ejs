@@ -1,0 +1,37 @@
+<%- include('../partials/encabezado', { titulo: 'Farmacias' }) %>
+    <h1>Farmacias</h1>
+    <p class="subtitulo">Farmacias clientes activas.</p>
+    <% if (mensaje) { %><div class="alerta exito"><%= mensaje %></div><% } %>
+    <div class="barra">
+      <form method="get" action="/farmacias">
+        <input type="text" name="buscar" value="<%= buscar %>" placeholder="Buscar por nombre o NIT" size="28">
+        <button class="boton secundario" type="submit">Buscar</button>
+        <% if (buscar) { %><a href="/farmacias">Quitar filtro</a><% } %>
+      </form>
+      <a class="boton" href="/farmacias/nueva">Nueva farmacia</a>
+    </div>
+    <% if (farmacias.length === 0) { %>
+      <div class="alerta aviso"><%= buscar ? 'No se encontraron farmacias que coincidan con la búsqueda.' : 'Todavía no hay farmacias registradas.' %></div>
+    <% } else { %>
+    <table>
+      <tr><th>Nombre</th><th>NIT</th><th>Responsable</th><th>Teléfono</th><th>Zona</th><th>Acciones</th></tr>
+      <% farmacias.forEach(f => { %>
+      <tr>
+        <td><%= f.nombre %></td>
+        <td><%= f.nit %></td>
+        <td><%= f.responsable || '-' %></td>
+        <td><%= f.telefono %></td>
+        <td><%= f.zona %></td>
+        <td class="acciones">
+          <a class="boton chico secundario" href="/farmacias/<%= f.id_farmacia %>">Ver</a>
+          <a class="boton chico secundario" href="/farmacias/<%= f.id_farmacia %>/editar">Editar</a>
+          <form method="post" action="/farmacias/<%= f.id_farmacia %>/desactivar" onsubmit="return confirm('¿Desea desactivar esta farmacia? Su historial de pedidos se conserva.');">
+            <button class="boton chico peligro" type="submit">Desactivar</button>
+          </form>
+        </td>
+      </tr>
+      <% }) %>
+    </table>
+    <div class="paginacion"><span><%= farmacias.length %> farmacia(s) activa(s)</span></div>
+    <% } %>
+<%- include('../partials/pie') %>
