@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Detalle de farmacia - Sistema de Pedidos Mayoristas</title>
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+<header class="encabezado">
+  <div class="marca">Laboratorio Químico Delta <span>Sistema de Pedidos Mayoristas</span></div>
+  <div class="usuario">María Fernández (Ejecutivo de ventas) <a href="index.html">Cerrar sesión</a></div>
+</header>
+<div class="contenedor">
+  <nav class="menu">
+    <a href="panel.html">Panel principal</a>
+    <div class="grupo">Ventas</div>
+    <a href="farmacias.html" class="activo">Farmacias</a>
+    <a href="pedidos.html">Pedidos</a>
+    <div class="grupo">Catálogo</div>
+    <a href="medicamentos.html">Medicamentos</a>
+    <div class="grupo">Administración</div>
+    <a href="usuarios.html">Usuarios</a>
+    <a href="reporte.html">Reporte de pedidos</a>
+  </nav>
+  <main class="contenido">
+
+    <h1>Farmacia El Prado</h1>
+    <p class="subtitulo">Detalle de la farmacia y sus últimos pedidos.</p>
+    <div class="tarjeta">
+      <dl class="detalle">
+        <div><dt>NIT</dt><dd>1000000022</dd></div>
+        <div><dt>Responsable</dt><dd>Jorge Vargas</dd></div>
+        <div><dt>Teléfono</dt><dd>70000002</dd></div>
+        <div><dt>Zona</dt><dd>Norte</dd></div>
+        <div><dt>Dirección</dt><dd>Av. América Nro. 200</dd></div>
+        <div><dt>Fecha de registro</dt><dd>15/10/2026</dd></div>
+      </dl>
+      <div class="acciones"><a class="boton" href="farmacia-form.html">Editar</a><a class="boton secundario" href="pedido-nuevo.html">Registrar pedido</a><a class="boton secundario" href="farmacias.html">Volver al listado</a></div>
+    </div>
+    <div class="tarjeta">
+      <h3 style="margin-top:0">Pedidos de la farmacia</h3>
+      <table>
+        <tr><th>Nro.</th><th>Fecha</th><th class="numero">Total (Bs)</th><th>Estado</th></tr>
+        <tr><td><a href="pedido-detalle.html">P-0012</a></td><td>08/11/2026</td><td class="numero">1.842,00</td><td><span class="estado pendiente">Pendiente</span></td></tr>
+        <tr><td><a href="pedido-detalle.html">P-0007</a></td><td>02/11/2026</td><td class="numero">1.120,00</td><td><span class="estado entregado">Entregado</span></td></tr>
+      </table>
+    </div>
+    <p class="nota-prototipo">Prototipo de interfaz (sin datos reales). Pantalla relacionada con: RF-08.</p>
+  </main>
+</div>
+</body>
+</html>

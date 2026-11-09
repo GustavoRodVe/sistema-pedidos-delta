@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Registrar pedido - Sistema de Pedidos Mayoristas</title>
+<link rel="stylesheet" href="css/estilos.css">
+</head>
+<body>
+<header class="encabezado">
+  <div class="marca">Laboratorio Químico Delta <span>Sistema de Pedidos Mayoristas</span></div>
+  <div class="usuario">María Fernández (Ejecutivo de ventas) <a href="index.html">Cerrar sesión</a></div>
+</header>
+<div class="contenedor">
+  <nav class="menu">
+    <a href="panel.html">Panel principal</a>
+    <div class="grupo">Ventas</div>
+    <a href="farmacias.html">Farmacias</a>
+    <a href="pedidos.html" class="activo">Pedidos</a>
+    <div class="grupo">Catálogo</div>
+    <a href="medicamentos.html">Medicamentos</a>
+    <div class="grupo">Administración</div>
+    <a href="usuarios.html">Usuarios</a>
+    <a href="reporte.html">Reporte de pedidos</a>
+  </nav>
+  <main class="contenido">
+
+    <h1>Registrar pedido</h1>
+    <p class="subtitulo">Seleccione la farmacia y agregue los medicamentos solicitados. El subtotal y el total se calculan automáticamente.</p>
+    <div class="tarjeta">
+      <form action="pedido-detalle.html">
+        <div class="fila">
+          <div class="campo"><label>Farmacia <span class="obligatorio">*</span></label><select><option>Farmacia Santa Lucía (NIT 1000000011)</option><option selected>Farmacia El Prado (NIT 1000000022)</option><option>Farmacia Los Andes (NIT 1000000033)</option><option>Farmacia Nueva Esperanza (NIT 1000000044)</option></select></div>
+          <div class="campo"><label>Observación</label><input value="Entregar por la mañana"></div>
+        </div>
+        <div class="barra"><div class="filtros"><select><option>Paracetamol 500 mg - Caja x 100 tabletas</option><option>Amoxicilina 500 mg - Caja x 50 cápsulas</option><option>Loratadina 10 mg - Caja x 100 tabletas</option></select><input type="number" value="10" style="width:80px"><button class="boton secundario" type="button">Agregar</button></div></div>
+        <table>
+          <tr><th>Medicamento</th><th class="numero">Cantidad</th><th class="numero">Precio unitario (Bs)</th><th class="numero">Subtotal (Bs)</th><th></th></tr>
+          <tr><td>Paracetamol 500 mg - Caja x 100 tabletas</td><td class="numero">20</td><td class="numero">45,00</td><td class="numero">900,00</td><td><a class="boton chico peligro" href="#">Quitar</a></td></tr>
+          <tr><td>Amoxicilina 500 mg - Caja x 50 cápsulas</td><td class="numero">8</td><td class="numero">96,00</td><td class="numero">768,00</td><td><a class="boton chico peligro" href="#">Quitar</a></td></tr>
+          <tr><td>Vitamina C 500 mg - Frasco x 100 tabletas</td><td class="numero">3</td><td class="numero">38,00</td><td class="numero">114,00</td><td><a class="boton chico peligro" href="#">Quitar</a></td></tr>
+          <tr><td colspan="3" class="numero"><strong>Total del pedido</strong></td><td class="numero"><strong>1.782,00</strong></td><td></td></tr>
+        </table>
+        <div class="acciones" style="margin-top:14px"><button class="boton" type="submit">Registrar pedido</button><a class="boton secundario" href="pedidos.html">Cancelar</a></div>
+      </form>
+    </div>
+    <p class="nota-prototipo">Prototipo de interfaz (sin datos reales). Pantalla relacionada con: RF-18, RF-19.</p>
+  </main>
+</div>
+</body>
+</html>
