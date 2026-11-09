@@ -204,7 +204,7 @@ Las pruebas se ejecutaron sobre la aplicación funcionando con la base delta_ped
 
 ## Recorrido CREATE, READ, UPDATE y DELETE
 
-Los casos CP-01, CP-05, CP-07 y CP-09 forman el recorrido completo sobre una misma farmacia: se registra, aparece en el listado y en su detalle, se modifica y finalmente se desactiva. Lo mismo ocurre con un medicamento en CP-10, CP-13 y CP-15. En cada paso consultamos la tabla en MySQL para confirmar que el cambio quedó guardado y que no quedaron datos inconsistentes. Estas son las consultas, ejecutadas con el usuario de la aplicación:
+Los casos CP-01, CP-05, CP-07 y CP-09 forman el recorrido completo sobre una misma farmacia: se registra, aparece en el listado y en su detalle, se modifica y finalmente se desactiva. Lo mismo ocurre con un medicamento en CP-10, CP-13 y CP-15. En cada paso consultamos la tabla en MySQL para confirmar que el cambio quedó guardado y que no quedaron datos inconsistentes. Estas son las consultas principales, ejecutadas con el usuario de la aplicación (el resto está en evidencias/resultados.json):
 
 {{CONSULTAS}}
 
@@ -216,6 +216,8 @@ Los casos CP-01, CP-05, CP-07 y CP-09 forman el recorrido completo sobre una mis
 | La validación del precio aceptaba textos como "-abc" sin mostrar error (detectado al revisar el código antes de ejecutar las pruebas). | La expresión regular dejaba pasar cualquier valor que empezara con un signo menos. | Se cambió la expresión para aceptar solo números, con signo opcional, y luego comprobar que sea mayor que cero. | CP-11 rechaza el precio negativo con el mensaje correcto. |
 
 ## Capturas
+
+Se incluye la captura que muestra el resultado de los casos principales. Las 19 capturas completas, con los formularios llenos antes de enviar, están en la carpeta evidencias/capturas/ del repositorio.
 
 {{CAPTURAS}}
 

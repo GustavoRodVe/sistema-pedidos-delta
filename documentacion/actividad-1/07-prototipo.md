@@ -36,6 +36,8 @@ El recorrido principal empieza en el inicio de sesión, que lleva al panel. Desd
 
 ## Capturas del prototipo
 
+Incluimos las pantallas más representativas del recorrido. Las quince capturas completas están en la carpeta prototipos/capturas/ del repositorio y el prototipo se puede recorrer abriendo prototipos/index.html.
+
 ![Inicio de sesión](../../prototipos/capturas/01-index.png)
 
 ![Panel principal](../../prototipos/capturas/02-panel.png)
@@ -44,24 +46,10 @@ El recorrido principal empieza en el inicio de sesión, que lleva al panel. Desd
 
 ![Formulario de farmacia con errores de validación](../../prototipos/capturas/04-farmacia-form.png)
 
-![Detalle de farmacia](../../prototipos/capturas/05-farmacia-detalle.png)
-
-![Confirmación para desactivar una farmacia](../../prototipos/capturas/06-farmacia-desactivar.png)
-
-![Listado de medicamentos](../../prototipos/capturas/07-medicamentos.png)
-
 ![Formulario de medicamento](../../prototipos/capturas/08-medicamento-form.png)
-
-![Detalle de medicamento](../../prototipos/capturas/09-medicamento-detalle.png)
 
 ![Listado de pedidos](../../prototipos/capturas/10-pedidos.png)
 
 ![Registro de pedido](../../prototipos/capturas/11-pedido-nuevo.png)
 
 ![Detalle de pedido con error de stock](../../prototipos/capturas/12-pedido-detalle.png)
-
-![Usuarios](../../prototipos/capturas/13-usuarios.png)
-
-![Reporte de pedidos por farmacia](../../prototipos/capturas/14-reporte.png)
-
-![Registro no encontrado](../../prototipos/capturas/15-no-encontrado.png)
