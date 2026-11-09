@@ -52,8 +52,17 @@ async function iniciar() {
     console.error('Detalle:', err.code || err.message);
     process.exit(1);
   }
-  app.listen(PUERTO, () => {
+  const servidor = app.listen(PUERTO, () => {
     console.log(`Servidor iniciado en http://localhost:${PUERTO}`);
+  });
+  // Si el puerto está ocupado se muestra un mensaje claro en lugar de la traza completa.
+  servidor.on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+      console.error(`El puerto ${PUERTO} ya está en uso. Cierre la otra instancia o cambie PORT en el archivo .env.`);
+    } else {
+      console.error('No se pudo iniciar el servidor:', err.message);
+    }
+    process.exit(1);
   });
 }
 
