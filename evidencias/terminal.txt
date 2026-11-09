@@ -1,0 +1,31 @@
+$ git --version
+git version 2.56.0.windows.4
+$ node --version
+v26.13.0
+$ npm --version
+11.20.0
+$ mysql --version
+C:\Program Files\MySQL\MySQL Server 8.4\bin\mysql.exe  Ver 8.4.9 for Win64 on x86_64 (MySQL Community Server - GPL)
+
+$ npm ls --depth=0
+sistema-pedidos-delta@0.2.0 C:\Universidad\Desarrolo de Sistemas II\sistema-pedidos-delta
+├── dotenv@18.0.9
+├── ejs@7.0.2
+├── express@4.22.3
+└── mysql2@3.24.6
+
+
+$ PORT=3001 npm start   (inicio normal)
+Conexión a MySQL establecida (base de datos: delta_pedidos)
+Servidor iniciado en http://localhost:3001
+
+$ npm start   (con otra instancia ya usando el puerto 3000)
+Conexión a MySQL establecida (base de datos: delta_pedidos)
+El puerto 3000 ya está en uso. Cierre la otra instancia o cambie PORT en el archivo .env.
+
+$ DB_PASSWORD=incorrecta npm start   (contraseña de base de datos incorrecta)
+No se pudo conectar a MySQL. Revise los datos del archivo .env.
+Detalle: ER_ACCESS_DENIED_ERROR
+
+$ git check-ignore -v .env
+.gitignore:2:.env	.env

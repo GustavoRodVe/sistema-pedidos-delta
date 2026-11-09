@@ -1,0 +1,201 @@
+{
+  "fecha": "2026-11-09T00:11:32.374Z",
+  "resultados": [
+    {
+      "cp": "CP-01",
+      "caso": "Registrar una farmacia con todos los datos válidos.",
+      "esperado": "Se guarda la farmacia, se muestra un mensaje de confirmación y aparece en el listado.",
+      "obtenido": "Mensaje \"La farmacia se registró correctamente.\". La consulta a MySQL devuelve la fila con id 5.",
+      "estado": "Aprobado",
+      "capturas": [
+        "01-cp01-formulario-farmacia.png",
+        "02-cp01-farmacia-registrada.png"
+      ]
+    },
+    {
+      "cp": "CP-02",
+      "caso": "Registrar una farmacia sin NIT, teléfono, dirección ni zona.",
+      "esperado": "El sistema rechaza el registro y muestra qué campos faltan.",
+      "obtenido": "Se mostraron 4 mensajes: El NIT es obligatorio. El teléfono es obligatorio. La dirección es obligatoria. Seleccione una zona. No se guardó ninguna fila.",
+      "estado": "Aprobado",
+      "capturas": [
+        "03-cp02-campos-obligatorios.png"
+      ]
+    },
+    {
+      "cp": "CP-03",
+      "caso": "Registrar una farmacia con un NIT que ya existe.",
+      "esperado": "El sistema informa que el NIT ya está registrado y no guarda el registro.",
+      "obtenido": "Mensaje \"Ya existe una farmacia registrada con este NIT.\".",
+      "estado": "Aprobado",
+      "capturas": [
+        "04-cp03-nit-duplicado.png"
+      ]
+    },
+    {
+      "cp": "CP-04",
+      "caso": "Registrar una farmacia con NIT \"12AB\" y teléfono \"abc\".",
+      "esperado": "El sistema rechaza los formatos incorrectos con mensajes claros.",
+      "obtenido": "Mensajes: El NIT debe tener solo números (entre 7 y 20 dígitos). El teléfono solo puede tener números, espacios, + o - (de 7 a 20 caracteres).",
+      "estado": "Aprobado",
+      "capturas": [
+        "05-cp04-formato-invalido.png"
+      ]
+    },
+    {
+      "cp": "CP-05",
+      "caso": "Consultar el listado de farmacias y el detalle de la farmacia registrada.",
+      "esperado": "Se muestran los datos guardados en la base de datos.",
+      "obtenido": "El listado muestra 5 farmacias activas y el detalle muestra \"Farmacia San Martín de Prueba\".",
+      "estado": "Aprobado",
+      "capturas": [
+        "06-cp05-listado-farmacias.png",
+        "07-cp05-detalle-farmacia.png"
+      ]
+    },
+    {
+      "cp": "CP-06",
+      "caso": "Consultar la farmacia con id 9999, que no existe.",
+      "esperado": "Se informa que el registro no existe, sin mostrar errores técnicos.",
+      "obtenido": "Código HTTP 404 y mensaje \"La farmacia que busca no existe o fue desactivada.\".",
+      "estado": "Aprobado",
+      "capturas": [
+        "08-cp06-farmacia-inexistente.png"
+      ]
+    },
+    {
+      "cp": "CP-07",
+      "caso": "Cambiar el teléfono y la zona de la farmacia registrada.",
+      "esperado": "Los cambios se guardan y se ven al consultar de nuevo.",
+      "obtenido": "Mensaje \"Los datos de la farmacia se actualizaron correctamente.\". En MySQL el teléfono quedó 70000077 y la zona Sacaba.",
+      "estado": "Aprobado",
+      "capturas": [
+        "09-cp07-editar-farmacia.png",
+        "10-cp07-farmacia-actualizada.png"
+      ]
+    },
+    {
+      "cp": "CP-08",
+      "caso": "Enviar una actualización para la farmacia con id 9999.",
+      "esperado": "Se responde que el registro no existe.",
+      "obtenido": "Código HTTP 404, página de \"Farmacia no encontrada\".",
+      "estado": "Aprobado",
+      "capturas": [
+        "11-cp08-actualizar-inexistente.png"
+      ]
+    },
+    {
+      "cp": "CP-09",
+      "caso": "Desactivar la farmacia registrada desde el listado.",
+      "esperado": "La farmacia deja de aparecer en el listado y en la base queda con activo = 0.",
+      "obtenido": "Mensaje \"La farmacia fue desactivada. Su historial de pedidos se conserva.\". El NIT ya no aparece en el listado y la fila conserva activo = 0.",
+      "estado": "Aprobado",
+      "capturas": [
+        "12-cp09-farmacia-desactivada.png"
+      ]
+    },
+    {
+      "cp": "CP-10",
+      "caso": "Registrar un medicamento con datos válidos.",
+      "esperado": "Se guarda el medicamento con su categoría y aparece en el catálogo.",
+      "obtenido": "Mensaje \"El medicamento se registró correctamente.\". MySQL devuelve el medicamento con id 7, categoría Antialérgicos y precio 33.50.",
+      "estado": "Aprobado",
+      "capturas": [
+        "13-cp10-formulario-medicamento.png",
+        "14-cp10-medicamento-registrado.png"
+      ]
+    },
+    {
+      "cp": "CP-11",
+      "caso": "Registrar un medicamento con precio -15 y stock -3.",
+      "esperado": "El sistema rechaza los valores y explica la regla.",
+      "obtenido": "Mensajes: El precio debe ser mayor que cero. El stock no puede ser negativo.",
+      "estado": "Aprobado",
+      "capturas": [
+        "15-cp11-precio-stock-negativos.png"
+      ]
+    },
+    {
+      "cp": "CP-12",
+      "caso": "Enviar un medicamento con una categoría que no existe (id 99), alterando el formulario desde el navegador.",
+      "esperado": "El backend vuelve a validar y rechaza la categoría.",
+      "obtenido": "Mensaje \"La categoría seleccionada no existe.\".",
+      "estado": "Aprobado",
+      "capturas": [
+        "16-cp12-categoria-inexistente.png"
+      ]
+    },
+    {
+      "cp": "CP-13",
+      "caso": "Cambiar el precio a 35.90 y el stock a 150 del medicamento registrado.",
+      "esperado": "Los nuevos valores quedan guardados.",
+      "obtenido": "Mensaje \"Los datos del medicamento se actualizaron correctamente.\". MySQL muestra precio 35.90 y stock 150.",
+      "estado": "Aprobado",
+      "capturas": [
+        "17-cp13-medicamento-actualizado.png"
+      ]
+    },
+    {
+      "cp": "CP-14",
+      "caso": "Registrar otra vez Cetirizina 10 mg en Caja x 100 tabletas.",
+      "esperado": "Se informa que ya existe un medicamento con ese nombre y presentación.",
+      "obtenido": "Mensaje \"Ya existe un medicamento con el mismo nombre y presentación.\".",
+      "estado": "Aprobado",
+      "capturas": [
+        "18-cp14-medicamento-duplicado.png"
+      ]
+    },
+    {
+      "cp": "CP-15",
+      "caso": "Desactivar el medicamento registrado desde su detalle.",
+      "esperado": "Deja de aparecer en el catálogo y queda con activo = 0.",
+      "obtenido": "Mensaje \"El medicamento fue desactivado y ya no aparece en el catálogo.\". MySQL muestra activo = 0 y su detalle ahora responde 404.",
+      "estado": "Aprobado",
+      "capturas": [
+        "19-cp15-medicamento-desactivado.png"
+      ]
+    }
+  ],
+  "consultas": [
+    {
+      "titulo": "Estado inicial de la tabla farmacia",
+      "texto": "mysql> SELECT id_farmacia, nombre, nit, zona, activo FROM farmacia;\n+-------------+--------------------------------+------------+-------------+--------+\r\n| id_farmacia | nombre                         | nit        | zona        | activo |\r\n+-------------+--------------------------------+------------+-------------+--------+\r\n|           1 | Farmacia Central de Prueba     | 1000000011 | Centro      |      1 |\r\n|           2 | Farmacia Norte de Prueba       | 1000000022 | Norte       |      1 |\r\n|           3 | Farmacia Sud de Prueba         | 1000000033 | Sud         |      1 |\r\n|           4 | Farmacia Quillacollo de Prueba | 1000000044 | Quillacollo |      1 |\r\n+-------------+--------------------------------+------------+-------------+--------+\r\n"
+    },
+    {
+      "titulo": "CP-01: la farmacia registrada existe en la base de datos",
+      "texto": "mysql> SELECT id_farmacia, nombre, nit, telefono, zona, activo FROM farmacia WHERE nit = '1000000055';\n+-------------+--------------------------------+------------+----------+-------+--------+\r\n| id_farmacia | nombre                         | nit        | telefono | zona  | activo |\r\n+-------------+--------------------------------+------------+----------+-------+--------+\r\n|           5 | Farmacia San Martín de Prueba  | 1000000055 | 70000005 | Norte |      1 |\r\n+-------------+--------------------------------+------------+----------+-------+--------+\r\n"
+    },
+    {
+      "titulo": "CP-02: no se guardó ningún registro incompleto",
+      "texto": "mysql> SELECT COUNT(*) AS total FROM farmacia WHERE nombre = 'Farmacia Incompleta';\n+-------+\r\n| total |\r\n+-------+\r\n|     0 |\r\n+-------+\r\n"
+    },
+    {
+      "titulo": "CP-07: valor antes de la actualización",
+      "texto": "mysql> SELECT id_farmacia, nombre, telefono, zona FROM farmacia WHERE id_farmacia = 5;\n+-------------+--------------------------------+----------+-------+\r\n| id_farmacia | nombre                         | telefono | zona  |\r\n+-------------+--------------------------------+----------+-------+\r\n|           5 | Farmacia San Martín de Prueba  | 70000005 | Norte |\r\n+-------------+--------------------------------+----------+-------+\r\n"
+    },
+    {
+      "titulo": "CP-07: valor después de la actualización",
+      "texto": "mysql> SELECT id_farmacia, nombre, telefono, zona FROM farmacia WHERE id_farmacia = 5;\n+-------------+--------------------------------+----------+--------+\r\n| id_farmacia | nombre                         | telefono | zona   |\r\n+-------------+--------------------------------+----------+--------+\r\n|           5 | Farmacia San Martín de Prueba  | 70000077 | Sacaba |\r\n+-------------+--------------------------------+----------+--------+\r\n"
+    },
+    {
+      "titulo": "CP-09: la farmacia desactivada se conserva con activo = 0",
+      "texto": "mysql> SELECT id_farmacia, nombre, activo FROM farmacia WHERE id_farmacia = 5;\n+-------------+--------------------------------+--------+\r\n| id_farmacia | nombre                         | activo |\r\n+-------------+--------------------------------+--------+\r\n|           5 | Farmacia San Martín de Prueba  |      0 |\r\n+-------------+--------------------------------+--------+\r\n"
+    },
+    {
+      "titulo": "CP-10: el medicamento registrado existe con su categoría",
+      "texto": "mysql> SELECT m.id_medicamento, m.nombre, m.presentacion, c.nombre AS categoria, m.precio_mayorista, m.stock FROM medicamento m JOIN categoria c ON c.id_categoria = m.id_categoria WHERE m.nombre = 'Cetirizina 10 mg';\n+----------------+------------------+---------------------+----------------+------------------+-------+\r\n| id_medicamento | nombre           | presentacion        | categoria      | precio_mayorista | stock |\r\n+----------------+------------------+---------------------+----------------+------------------+-------+\r\n|              7 | Cetirizina 10 mg | Caja x 100 tabletas | Antialérgicos  |            33.50 |   120 |\r\n+----------------+------------------+---------------------+----------------+------------------+-------+\r\n"
+    },
+    {
+      "titulo": "CP-13: medicamento antes de la actualización",
+      "texto": "mysql> SELECT id_medicamento, nombre, precio_mayorista, stock FROM medicamento WHERE id_medicamento = 7;\n+----------------+------------------+------------------+-------+\r\n| id_medicamento | nombre           | precio_mayorista | stock |\r\n+----------------+------------------+------------------+-------+\r\n|              7 | Cetirizina 10 mg |            33.50 |   120 |\r\n+----------------+------------------+------------------+-------+\r\n"
+    },
+    {
+      "titulo": "CP-13: medicamento después de la actualización",
+      "texto": "mysql> SELECT id_medicamento, nombre, precio_mayorista, stock FROM medicamento WHERE id_medicamento = 7;\n+----------------+------------------+------------------+-------+\r\n| id_medicamento | nombre           | precio_mayorista | stock |\r\n+----------------+------------------+------------------+-------+\r\n|              7 | Cetirizina 10 mg |            35.90 |   150 |\r\n+----------------+------------------+------------------+-------+\r\n"
+    },
+    {
+      "titulo": "CP-15: el medicamento desactivado se conserva con activo = 0",
+      "texto": "mysql> SELECT id_medicamento, nombre, activo FROM medicamento WHERE id_medicamento = 7;\n+----------------+------------------+--------+\r\n| id_medicamento | nombre           | activo |\r\n+----------------+------------------+--------+\r\n|              7 | Cetirizina 10 mg |      0 |\r\n+----------------+------------------+--------+\r\n"
+    }
+  ]
+}
