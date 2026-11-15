@@ -1,0 +1,29 @@
+<%#
+  Componente reutilizable para un campo de formulario: etiqueta, control, texto de
+  ayuda y mensaje de error. El mensaje de error lo escribe el servidor y también
+  public/js/app.js cuando valida en el navegador.
+  Parámetros: id, etiqueta, valor, errores, obligatorio, ayuda, opciones (si es lista),
+  textoVacio, atributos (texto con atributos extra del control).
+%>
+<%
+  const error = errores[id];
+  const obligatorioCampo = typeof obligatorio !== 'undefined' && obligatorio;
+  const ayudaCampo = typeof ayuda !== 'undefined' ? ayuda : '';
+  const listaOpciones = typeof opciones !== 'undefined' ? opciones : null;
+  const extra = typeof atributos !== 'undefined' ? atributos : '';
+  const valorCampo = valor === null || valor === undefined ? '' : String(valor);
+  const describe = [ayudaCampo ? 'ayuda-' + id : '', 'error-' + id].filter(Boolean).join(' ');
+%>
+<div class="campo<%= error ? ' error' : '' %>">
+  <label for="<%= id %>"><%= etiqueta %><% if (obligatorioCampo) { %> <span class="obligatorio" aria-hidden="true">*</span><span class="oculto"> (obligatorio)</span><% } %></label>
+  <% if (listaOpciones) { %>
+    <select id="<%= id %>" name="<%= id %>" aria-describedby="<%= describe %>"<%= error ? ' aria-invalid=true' : '' %><%- obligatorioCampo ? ' required' : '' %>>
+      <option value=""><%= typeof textoVacio !== 'undefined' ? textoVacio : 'Seleccione...' %></option>
+      <% listaOpciones.forEach(o => { %><option value="<%= o.valor %>"<%= String(o.valor) === valorCampo ? ' selected' : '' %>><%= o.texto %></option><% }) %>
+    </select>
+  <% } else { %>
+    <input id="<%= id %>" name="<%= id %>" value="<%= valorCampo %>" aria-describedby="<%= describe %>"<%= error ? ' aria-invalid=true' : '' %><%- obligatorioCampo ? ' required' : '' %> <%- extra %>>
+  <% } %>
+  <% if (ayudaCampo) { %><div class="ayuda" id="ayuda-<%= id %>"><%= ayudaCampo %></div><% } %>
+  <div class="mensaje-error" id="error-<%= id %>"><%= error || '' %></div>
+</div>

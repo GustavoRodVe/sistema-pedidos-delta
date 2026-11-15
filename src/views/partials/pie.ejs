@@ -1,4 +1,15 @@
   </main>
 </div>
+<footer class="pie">Laboratorio Químico Delta · Sistema de Pedidos Mayoristas · Proyecto académico con datos ficticios</footer>
+
+<%# Cuadro de confirmación reutilizable. Lo abre public/js/app.js antes de desactivar un registro. %>
+<dialog class="modal" id="modal-confirmar" aria-labelledby="modal-titulo" aria-describedby="modal-texto">
+  <h2 id="modal-titulo">Confirmar acción</h2>
+  <p id="modal-texto"></p>
+  <div class="acciones">
+    <button class="boton secundario" type="button" data-accion="cancelar">Cancelar</button>
+    <button class="boton peligro" type="button" data-accion="confirmar">Sí, desactivar</button>
+  </div>
+</dialog>
 </body>
 </html>

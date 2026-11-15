@@ -1,37 +1,51 @@
 <%- include('../partials/encabezado', { titulo: 'Farmacias' }) %>
     <h1>Farmacias</h1>
-    <p class="subtitulo">Farmacias clientes activas.</p>
-    <% if (mensaje) { %><div class="alerta exito"><%= mensaje %></div><% } %>
+    <p class="subtitulo">Farmacias clientes activas que compran al por mayor.</p>
+    <%- include('../partials/alerta', { mensaje }) %>
     <div class="barra">
-      <form method="get" action="/farmacias">
-        <input type="text" name="buscar" value="<%= buscar %>" placeholder="Buscar por nombre o NIT" size="28">
+      <form method="get" action="/farmacias" role="search" data-cargando="Buscando farmacias...">
+        <label class="oculto" for="buscar">Buscar farmacia por nombre o NIT</label>
+        <input type="search" id="buscar" name="buscar" value="<%= buscar %>" placeholder="Nombre o NIT" maxlength="100">
         <button class="boton secundario" type="submit">Buscar</button>
         <% if (buscar) { %><a href="/farmacias">Quitar filtro</a><% } %>
       </form>
       <a class="boton" href="/farmacias/nueva">Nueva farmacia</a>
     </div>
     <% if (farmacias.length === 0) { %>
-      <div class="alerta aviso"><%= buscar ? 'No se encontraron farmacias que coincidan con la búsqueda.' : 'Todavía no hay farmacias registradas.' %></div>
+      <div class="vacio-bloque">
+        <% if (buscar) { %>
+          <p>No se encontraron farmacias con el nombre o NIT «<%= buscar %>».</p>
+          <a class="boton secundario" href="/farmacias">Ver todas las farmacias</a>
+        <% } else { %>
+          <p>Todavía no hay farmacias registradas.</p>
+          <a class="boton" href="/farmacias/nueva">Registrar la primera farmacia</a>
+        <% } %>
+      </div>
     <% } else { %>
-    <table>
-      <tr><th>Nombre</th><th>NIT</th><th>Responsable</th><th>Teléfono</th><th>Zona</th><th>Acciones</th></tr>
+    <table class="tabla-adaptable">
+      <caption class="oculto">Listado de farmacias activas</caption>
+      <thead>
+        <tr><th scope="col">Nombre</th><th scope="col">NIT</th><th scope="col">Responsable</th><th scope="col">Teléfono</th><th scope="col">Zona</th><th scope="col">Acciones</th></tr>
+      </thead>
+      <tbody>
       <% farmacias.forEach(f => { %>
       <tr>
-        <td><%= f.nombre %></td>
-        <td><%= f.nit %></td>
-        <td><%= f.responsable || '-' %></td>
-        <td><%= f.telefono %></td>
-        <td><%= f.zona %></td>
-        <td class="acciones">
-          <a class="boton chico secundario" href="/farmacias/<%= f.id_farmacia %>">Ver</a>
-          <a class="boton chico secundario" href="/farmacias/<%= f.id_farmacia %>/editar">Editar</a>
-          <form method="post" action="/farmacias/<%= f.id_farmacia %>/desactivar" onsubmit="return confirm('¿Desea desactivar esta farmacia? Su historial de pedidos se conserva.');">
-            <button class="boton chico peligro" type="submit">Desactivar</button>
+        <td data-label="Nombre" class="principal"><a href="/farmacias/<%= f.id_farmacia %>"><%= f.nombre %></a></td>
+        <td data-label="NIT"><%= f.nit %></td>
+        <td data-label="Responsable"><%= f.responsable || 'No registrado' %></td>
+        <td data-label="Teléfono"><%= f.telefono %></td>
+        <td data-label="Zona"><%= f.zona %></td>
+        <td data-label="Acciones" class="acciones">
+          <a class="boton chico secundario" href="/farmacias/<%= f.id_farmacia %>" aria-label="Ver <%= f.nombre %>">Ver</a>
+          <a class="boton chico secundario" href="/farmacias/<%= f.id_farmacia %>/editar" aria-label="Editar <%= f.nombre %>">Editar</a>
+          <form method="post" action="/farmacias/<%= f.id_farmacia %>/desactivar" data-confirmar="¿Desea desactivar la farmacia «<%= f.nombre %>»? Dejará de aparecer en el listado, pero su historial de pedidos se conserva.">
+            <button class="boton chico peligro" type="submit" aria-label="Desactivar <%= f.nombre %>">Desactivar</button>
           </form>
         </td>
       </tr>
       <% }) %>
+      </tbody>
     </table>
-    <div class="paginacion"><span><%= farmacias.length %> farmacia(s) activa(s)</span></div>
+    <div class="paginacion"><span><%= farmacias.length %> farmacia(s) activa(s)<%= buscar ? ' que coinciden con la búsqueda' : '' %></span></div>
     <% } %>
 <%- include('../partials/pie') %>

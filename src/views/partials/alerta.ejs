@@ -1,0 +1,7 @@
+<%# Mensaje de confirmación después de registrar, editar o desactivar. No se oculta solo: el usuario lo cierra. %>
+<% if (mensaje) { %>
+<div class="alerta exito" role="status">
+  <span><strong>Listo.</strong> <%= mensaje %></span>
+  <button class="cerrar" type="button" aria-label="Cerrar mensaje">&times;</button>
+</div>
+<% } %>

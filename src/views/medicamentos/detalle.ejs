@@ -1,17 +1,18 @@
 <%- include('../partials/encabezado', { titulo: medicamento.nombre }) %>
+    <nav class="migas" aria-label="Ubicación"><a href="/medicamentos">Medicamentos</a> / <span><%= medicamento.nombre %></span></nav>
     <h1><%= medicamento.nombre %></h1>
     <p class="subtitulo">Detalle del medicamento.</p>
-    <% if (mensaje) { %><div class="alerta exito"><%= mensaje %></div><% } %>
+    <%- include('../partials/alerta', { mensaje }) %>
     <div class="tarjeta">
       <dl class="detalle">
         <div><dt>Presentación</dt><dd><%= medicamento.presentacion %></dd></div>
         <div><dt>Categoría</dt><dd><%= medicamento.categoria %></dd></div>
         <div><dt>Precio mayorista</dt><dd>Bs <%= medicamento.precio_mayorista.toFixed(2) %></dd></div>
-        <div><dt>Stock disponible</dt><dd><%= medicamento.stock %></dd></div>
+        <div><dt>Stock disponible</dt><dd><%= medicamento.stock %> unidades<% if (medicamento.stock < STOCK_MINIMO) { %> <span class="estado bajo">Stock bajo</span><% } %></dd></div>
       </dl>
       <div class="acciones">
         <a class="boton" href="/medicamentos/<%= medicamento.id_medicamento %>/editar">Editar</a>
-        <form method="post" action="/medicamentos/<%= medicamento.id_medicamento %>/desactivar" onsubmit="return confirm('¿Desea desactivar este medicamento?');">
+        <form method="post" action="/medicamentos/<%= medicamento.id_medicamento %>/desactivar" data-confirmar="¿Desea desactivar el medicamento «<%= medicamento.nombre %>»? Ya no aparecerá en el catálogo, pero se conserva en los pedidos anteriores.">
           <button class="boton peligro" type="submit">Desactivar</button>
         </form>
         <a class="boton secundario" href="/medicamentos">Volver al listado</a>
