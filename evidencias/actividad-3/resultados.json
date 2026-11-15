@@ -1,0 +1,188 @@
+{
+  "resultados": [
+    {
+      "id": "R-01",
+      "accion": "Abrir la página principal.",
+      "esperado": "Se muestra el panel con cifras tomadas de la base de datos.",
+      "obtenido": "El panel muestra 4 farmacias activas; la consulta SQL devuelve 4.",
+      "estado": "Correcto",
+      "capturas": [
+        "01-inicio-panel-principal.png"
+      ]
+    },
+    {
+      "id": "R-02",
+      "accion": "Elegir \"Farmacias\" en el menú.",
+      "esperado": "Se abre el listado y la opción queda marcada como activa.",
+      "obtenido": "Se abrió /farmacias con la opción \"Farmacias\" marcada.",
+      "estado": "Correcto",
+      "capturas": [
+        "02-menu-listado-farmacias.png"
+      ]
+    },
+    {
+      "id": "R-03",
+      "accion": "Buscar farmacias por nombre (\"norte\") y luego un nombre que no existe.",
+      "esperado": "Se listan solo las coincidencias; si no hay, se muestra un mensaje claro.",
+      "obtenido": "Primera búsqueda: 1 resultado(s). Segunda: \"No se encontraron farmacias con el nombre o NIT «Farmacia Inexistente».\"",
+      "estado": "Correcto",
+      "capturas": [
+        "03-busqueda-farmacia.png",
+        "04-busqueda-sin-resultados.png"
+      ]
+    },
+    {
+      "id": "R-04",
+      "accion": "Presionar Guardar con el formulario vacío y luego con NIT \"12AB\" y teléfono \"llamar\".",
+      "esperado": "Los errores aparecen junto a cada campo y no se envía nada al servidor.",
+      "obtenido": "5 campos marcados; NIT: \"El NIT debe tener solo números (entre 7 y 20 dígitos).\". Solicitudes POST enviadas: 0.",
+      "estado": "Correcto",
+      "capturas": [
+        "05-formulario-farmacia-vacio.png",
+        "06-validacion-campos-obligatorios.png",
+        "07-validacion-formato-nit-telefono.png"
+      ]
+    },
+    {
+      "id": "R-05",
+      "accion": "Completar el formulario con datos válidos y presionar Guardar.",
+      "esperado": "El botón se bloquea con \"Guardando...\"; después se muestra la confirmación y la farmacia aparece en el listado y en la base de datos.",
+      "obtenido": "Botón: \"Guardando...\" (deshabilitado: true). Mensaje: \"Listo. La farmacia se registró correctamente.\" Registro en BD con id 14.",
+      "estado": "Correcto",
+      "capturas": [
+        "08-estado-guardando.png",
+        "09-farmacia-registrada.png"
+      ]
+    },
+    {
+      "id": "R-06",
+      "accion": "Abrir Editar, cambiar teléfono y responsable, guardar y recargar la página.",
+      "esperado": "El formulario trae los datos actuales y, después de recargar, se ven los valores nuevos.",
+      "obtenido": "Valor cargado: \"70000006\". Después de recargar: \"Teléfono: 4 4251234\".",
+      "estado": "Correcto",
+      "capturas": [
+        "10-detalle-farmacia.png",
+        "11-editar-farmacia-datos-cargados.png",
+        "12-farmacia-actualizada.png"
+      ]
+    },
+    {
+      "id": "R-07",
+      "accion": "Registrar una farmacia con un NIT que ya existe.",
+      "esperado": "El servidor rechaza el registro, explica el motivo junto al campo y conserva lo escrito.",
+      "obtenido": "Código 409. Mensaje: \"Ya existe una farmacia registrada con este NIT.\". El nombre escrito se conservó: \"Farmacia Duplicada de Prueba\".",
+      "estado": "Correcto",
+      "capturas": [
+        "13-error-servidor-nit-duplicado.png"
+      ]
+    },
+    {
+      "id": "R-08",
+      "accion": "Presionar Desactivar, cancelar en el cuadro de confirmación y después confirmar.",
+      "esperado": "Al cancelar no cambia nada; al confirmar la farmacia sale del listado y queda con activo = 0.",
+      "obtenido": "Mensaje del cuadro: \"¿Desea desactivar la farmacia «Farmacia Tunari de Prueba»? D...\". Filas: 5 antes, 5 al cancelar, 4 al confirmar. Mensaje: \"Listo. La farmacia fue desactivada. Su historial de pedidos se conserva.\"",
+      "estado": "Correcto",
+      "capturas": [
+        "14-confirmacion-desactivar.png",
+        "15-confirmacion-cancelada.png",
+        "16-farmacia-desactivada.png"
+      ]
+    },
+    {
+      "id": "R-09",
+      "accion": "Abrir Medicamentos desde el menú y filtrar por la categoría Analgésicos.",
+      "esperado": "Mientras responde el servidor se ve \"Cargando...\"; luego el catálogo y el filtro muestran solo esa categoría.",
+      "obtenido": "Indicador visible: true. Filtro: 2 medicamento(s) de Analgésicos.",
+      "estado": "Correcto",
+      "capturas": [
+        "17-estado-cargando.png",
+        "18-listado-medicamentos.png",
+        "19-filtro-por-categoria.png"
+      ]
+    },
+    {
+      "id": "R-10",
+      "accion": "Registrar un medicamento con precio -15 y stock 10.5, corregir a 28,50 y 300, y luego editar el stock a 40.",
+      "esperado": "Se rechazan los valores inválidos; con datos correctos se guarda y, al bajar el stock, el panel lo muestra con stock bajo.",
+      "obtenido": "Errores: \"El precio debe ser mayor que cero.\" / \"El stock debe ser un número entero.\". Mensaje: \"Listo. El medicamento se registró correctamente.\". Panel: 3 con stock bajo (Diclofenaco en la lista: true).",
+      "estado": "Correcto",
+      "capturas": [
+        "20-validacion-precio-stock.png",
+        "21-medicamento-registrado.png",
+        "22-medicamento-actualizado-stock-bajo.png",
+        "23-panel-actualizado.png"
+      ]
+    },
+    {
+      "id": "R-11",
+      "accion": "Escribir en la barra de direcciones /proveedores y /farmacias/9999.",
+      "esperado": "Se muestra una página de \"no encontrado\" con un botón para volver, sin detalles técnicos.",
+      "obtenido": "Códigos 404 y 404; título: \"Farmacia no encontrada\".",
+      "estado": "Correcto",
+      "capturas": [
+        "24-ruta-inexistente-404.png",
+        "25-farmacia-inexistente.png"
+      ]
+    },
+    {
+      "id": "R-12",
+      "accion": "Recorrer el formulario solo con la tecla Tab.",
+      "esperado": "El primer Tab ofrece \"Saltar al contenido\" y el campo con foco se distingue con un borde visible.",
+      "obtenido": "Primer elemento: \"Saltar al contenido\". Se llegó al campo \"nombre\" con el teclado.",
+      "estado": "Correcto",
+      "capturas": [
+        "26-teclado-saltar-al-contenido.png",
+        "27-teclado-foco-visible.png"
+      ]
+    },
+    {
+      "id": "R-13",
+      "accion": "Abrir las pantallas con ancho de tableta (768 px) y de celular (390 px).",
+      "esperado": "El menú se abre con un botón, las tablas se ven como tarjetas y no aparece desplazamiento horizontal.",
+      "obtenido": "Menú desplegado (aria-expanded=true). Ancho de la página en celular: 390 px.",
+      "estado": "Correcto",
+      "capturas": [
+        "28-tableta-farmacias.png",
+        "29-celular-inicio.png",
+        "30-celular-menu-abierto.png",
+        "31-celular-farmacias-tarjetas.png",
+        "32-celular-formulario-errores.png"
+      ]
+    },
+    {
+      "id": "R-14",
+      "accion": "Detener MySQL con la aplicación abierta, abrir Farmacias y, al volver el servicio, presionar Reintentar.",
+      "esperado": "Se muestra un mensaje comprensible con la opción de reintentar; al volver la conexión se ve el listado.",
+      "obtenido": "Sin conexión: código 503 con el mensaje \"No se pudo conectar con la base de datos\". Al reintentar: código 200.",
+      "estado": "Correcto",
+      "capturas": [
+        "33-error-sin-conexion.png",
+        "34-reintentar-con-conexion.png"
+      ]
+    }
+  ],
+  "consultas": [
+    {
+      "titulo": "R-05: la farmacia registrada desde la interfaz está en la base de datos",
+      "texto": "mysql> SELECT id_farmacia, nombre, nit, telefono, zona, activo FROM farmacia WHERE nit = '1000000066';\n+-------------+---------------------------+------------+----------+-------+--------+\r\n| id_farmacia | nombre                    | nit        | telefono | zona  | activo |\r\n+-------------+---------------------------+------------+----------+-------+--------+\r\n|          14 | Farmacia Tunari de Prueba | 1000000066 | 70000006 | Oeste |      1 |\r\n+-------------+---------------------------+------------+----------+-------+--------+\r\n"
+    },
+    {
+      "titulo": "R-06: el cambio de teléfono persiste en la base de datos",
+      "texto": "mysql> SELECT id_farmacia, nombre, responsable, telefono FROM farmacia WHERE id_farmacia = 14;\n+-------------+---------------------------+-----------------------+-----------+\r\n| id_farmacia | nombre                    | responsable           | telefono  |\r\n+-------------+---------------------------+-----------------------+-----------+\r\n|          14 | Farmacia Tunari de Prueba | Marcelo Quiroga Rojas | 4 4251234 |\r\n+-------------+---------------------------+-----------------------+-----------+\r\n"
+    },
+    {
+      "titulo": "R-08: la farmacia queda inactiva (eliminación lógica), no se borra",
+      "texto": "mysql> SELECT id_farmacia, nombre, activo FROM farmacia WHERE id_farmacia = 14;\n+-------------+---------------------------+--------+\r\n| id_farmacia | nombre                    | activo |\r\n+-------------+---------------------------+--------+\r\n|          14 | Farmacia Tunari de Prueba |      0 |\r\n+-------------+---------------------------+--------+\r\n"
+    },
+    {
+      "titulo": "R-10: el medicamento registrado y modificado desde la interfaz",
+      "texto": "mysql> SELECT id_medicamento, nombre, presentacion, precio_mayorista, stock FROM medicamento WHERE id_medicamento = 12;\n+----------------+-------------------+---------------------+------------------+-------+\r\n| id_medicamento | nombre            | presentacion        | precio_mayorista | stock |\r\n+----------------+-------------------+---------------------+------------------+-------+\r\n|             12 | Diclofenaco 50 mg | Caja de 20 tabletas |            28.50 |    40 |\r\n+----------------+-------------------+---------------------+------------------+-------+\r\n"
+    }
+  ],
+  "erroresConsola": [
+    "Failed to load resource: the server responded with a status of 409 (Conflict)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)"
+  ]
+}
