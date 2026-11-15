@@ -4,19 +4,29 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title><%= titulo %> - Sistema de Pedidos Mayoristas</title>
+<link rel="icon" href="/img/logo-delta.svg" type="image/svg+xml">
 <link rel="stylesheet" href="/css/estilos.css">
+<script src="/js/app.js" defer></script>
 </head>
 <body>
+<a class="saltar" href="#contenido">Saltar al contenido</a>
 <header class="encabezado">
-  <div class="marca">Laboratorio Químico Delta <span>Sistema de Pedidos Mayoristas</span></div>
-  <div class="usuario">Versión de desarrollo (Actividad 2)</div>
+  <a class="marca" href="/">
+    <img src="/img/logo-delta.svg" alt="" width="30" height="30">
+    <span class="nombre">Laboratorio Químico Delta</span>
+    <span class="sistema">Sistema de Pedidos Mayoristas</span>
+  </a>
+  <button class="boton-menu" type="button" aria-controls="menu-principal" aria-expanded="false">
+    <span class="icono-menu" aria-hidden="true"></span>Menú
+  </button>
 </header>
 <div class="contenedor">
-  <nav class="menu">
-    <a href="/"<%- rutaActual === '/' ? ' class="activo"' : '' %>>Inicio</a>
+  <nav class="menu" id="menu-principal" aria-label="Menú principal">
+    <a href="/"<%- rutaActual === '/' ? ' class="activo" aria-current="page"' : '' %>>Inicio</a>
     <div class="grupo">Ventas</div>
-    <a href="/farmacias"<%- rutaActual.startsWith('/farmacias') ? ' class="activo"' : '' %>>Farmacias</a>
+    <a href="/farmacias"<%- rutaActual.startsWith('/farmacias') ? ' class="activo" aria-current="page"' : '' %>>Farmacias</a>
     <div class="grupo">Catálogo</div>
-    <a href="/medicamentos"<%- rutaActual.startsWith('/medicamentos') ? ' class="activo"' : '' %>>Medicamentos</a>
+    <a href="/medicamentos"<%- rutaActual.startsWith('/medicamentos') ? ' class="activo" aria-current="page"' : '' %>>Medicamentos</a>
   </nav>
-  <main class="contenido">
+  <main class="contenido" id="contenido" tabindex="-1">
+    <div class="cargando" role="status" aria-live="polite" hidden><span class="giro" aria-hidden="true"></span><span class="texto-cargando">Cargando...</span></div>

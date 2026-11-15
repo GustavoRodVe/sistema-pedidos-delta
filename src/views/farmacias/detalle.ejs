@@ -1,7 +1,8 @@
 <%- include('../partials/encabezado', { titulo: farmacia.nombre }) %>
+    <nav class="migas" aria-label="Ubicación"><a href="/farmacias">Farmacias</a> / <span><%= farmacia.nombre %></span></nav>
     <h1><%= farmacia.nombre %></h1>
     <p class="subtitulo">Detalle de la farmacia.</p>
-    <% if (mensaje) { %><div class="alerta exito"><%= mensaje %></div><% } %>
+    <%- include('../partials/alerta', { mensaje }) %>
     <div class="tarjeta">
       <dl class="detalle">
         <div><dt>NIT</dt><dd><%= farmacia.nit %></dd></div>
@@ -13,7 +14,7 @@
       </dl>
       <div class="acciones">
         <a class="boton" href="/farmacias/<%= farmacia.id_farmacia %>/editar">Editar</a>
-        <form method="post" action="/farmacias/<%= farmacia.id_farmacia %>/desactivar" onsubmit="return confirm('¿Desea desactivar esta farmacia? Su historial de pedidos se conserva.');">
+        <form method="post" action="/farmacias/<%= farmacia.id_farmacia %>/desactivar" data-confirmar="¿Desea desactivar la farmacia «<%= farmacia.nombre %>»? Dejará de aparecer en el listado, pero su historial de pedidos se conserva.">
           <button class="boton peligro" type="submit">Desactivar</button>
         </form>
         <a class="boton secundario" href="/farmacias">Volver al listado</a>

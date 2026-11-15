@@ -1,9 +1,48 @@
 <%- include('partials/encabezado', { titulo: 'Inicio' }) %>
-    <h1>Sistema de Pedidos Mayoristas</h1>
-    <p class="subtitulo">Módulos disponibles en esta versión.</p>
+    <h1>Panel principal</h1>
+    <p class="subtitulo">Resumen del día con datos obtenidos de la base de datos.</p>
+
     <div class="tarjetas">
-      <a class="indicador" href="/farmacias"><div class="valor">Farmacias</div><div class="texto">Registrar, consultar, modificar y desactivar farmacias clientes.</div></a>
-      <a class="indicador" href="/medicamentos"><div class="valor">Medicamentos</div><div class="texto">Administrar el catálogo con precio mayorista y stock.</div></a>
+      <a class="indicador" href="/farmacias">
+        <div class="valor"><%= totalFarmacias %></div>
+        <div class="etiqueta">Farmacias activas</div>
+        <div class="texto">Ver el listado de farmacias clientes</div>
+      </a>
+      <a class="indicador" href="/medicamentos">
+        <div class="valor"><%= totalMedicamentos %></div>
+        <div class="etiqueta">Medicamentos en catálogo</div>
+        <div class="texto">Ver precios mayoristas y stock</div>
+      </a>
+      <div class="indicador<%= stockBajo.length > 0 ? ' alerta-stock' : '' %>">
+        <div class="valor"><%= stockBajo.length %></div>
+        <div class="etiqueta">Con stock bajo</div>
+        <div class="texto">Menos de <%= STOCK_MINIMO %> unidades disponibles</div>
+      </div>
     </div>
-    <p class="ayuda">El registro de pedidos, el inicio de sesión y los reportes se implementan en las siguientes actividades.</p>
+
+    <div class="columnas">
+      <section class="tarjeta">
+        <h2>Accesos rápidos</h2>
+        <div class="accesos">
+          <a class="boton" href="/farmacias/nueva">Registrar farmacia</a>
+          <a class="boton" href="/medicamentos/nuevo">Registrar medicamento</a>
+          <a class="boton secundario" href="/farmacias">Buscar farmacia</a>
+        </div>
+      </section>
+      <section class="tarjeta">
+        <h2>Medicamentos con stock bajo</h2>
+        <% if (stockBajo.length === 0) { %>
+          <p class="vacio">Todos los medicamentos tienen stock suficiente.</p>
+        <% } else { %>
+          <ul class="lista-simple">
+            <% stockBajo.forEach(m => { %>
+            <li>
+              <a href="/medicamentos/<%= m.id_medicamento %>"><%= m.nombre %></a>
+              <span class="estado bajo">Stock bajo: <%= m.stock %></span>
+            </li>
+            <% }) %>
+          </ul>
+        <% } %>
+      </section>
+    </div>
 <%- include('partials/pie') %>

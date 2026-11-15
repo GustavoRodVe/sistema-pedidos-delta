@@ -1,0 +1,11 @@
+<%- include('../partials/encabezado', { titulo: 'Sin conexión' }) %>
+    <div class="pagina-error">
+      <p class="codigo" aria-hidden="true">503</p>
+      <h1>No se pudo conectar con la base de datos</h1>
+      <p>El sistema no puede consultar la información en este momento. Sus datos no se perdieron. Espere unos segundos y vuelva a intentarlo; si el problema continúa, avise al administrador del sistema.</p>
+      <div class="acciones">
+        <a class="boton" href="<%= reintentar %>">Reintentar</a>
+        <a class="boton secundario" href="/">Ir al inicio</a>
+      </div>
+    </div>
+<%- include('../partials/pie') %>

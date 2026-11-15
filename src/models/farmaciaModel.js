@@ -17,6 +17,12 @@ const Farmacia = {
     return filas;
   },
 
+  // Cantidad de farmacias activas, para el panel de inicio.
+  async contarActivas() {
+    const [filas] = await pool.query('SELECT COUNT(*) AS total FROM farmacia WHERE activo = 1');
+    return filas[0].total;
+  },
+
   async buscarPorId(id) {
     const [filas] = await pool.query(
       `SELECT id_farmacia, nombre, nit, responsable, telefono, direccion, zona, activo, fecha_registro

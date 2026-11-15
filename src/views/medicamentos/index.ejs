@@ -1,38 +1,53 @@
 <%- include('../partials/encabezado', { titulo: 'Medicamentos' }) %>
     <h1>Medicamentos</h1>
     <p class="subtitulo">Catálogo de medicamentos activos con precio mayorista y stock.</p>
-    <% if (mensaje) { %><div class="alerta exito"><%= mensaje %></div><% } %>
+    <%- include('../partials/alerta', { mensaje }) %>
     <div class="barra">
-      <form method="get" action="/medicamentos">
-        <select name="categoria">
+      <form method="get" action="/medicamentos" data-cargando="Filtrando medicamentos...">
+        <label class="oculto" for="categoria">Filtrar por categoría</label>
+        <select id="categoria" name="categoria">
           <option value="">Todas las categorías</option>
           <% categorias.forEach(c => { %><option value="<%= c.id_categoria %>"<%= idCategoria === c.id_categoria ? ' selected' : '' %>><%= c.nombre %></option><% }) %>
         </select>
         <button class="boton secundario" type="submit">Filtrar</button>
+        <% if (idCategoria) { %><a href="/medicamentos">Quitar filtro</a><% } %>
       </form>
       <a class="boton" href="/medicamentos/nuevo">Nuevo medicamento</a>
     </div>
     <% if (medicamentos.length === 0) { %>
-      <div class="alerta aviso">No hay medicamentos activos para mostrar.</div>
+      <div class="vacio-bloque">
+        <% if (idCategoria) { %>
+          <p>No hay medicamentos activos en la categoría seleccionada.</p>
+          <a class="boton secundario" href="/medicamentos">Ver todas las categorías</a>
+        <% } else { %>
+          <p>Todavía no hay medicamentos registrados en el catálogo.</p>
+          <a class="boton" href="/medicamentos/nuevo">Registrar el primer medicamento</a>
+        <% } %>
+      </div>
     <% } else { %>
-    <table>
-      <tr><th>Nombre</th><th>Presentación</th><th>Categoría</th><th class="numero">Precio mayorista (Bs)</th><th class="numero">Stock</th><th>Acciones</th></tr>
+    <table class="tabla-adaptable">
+      <caption class="oculto">Catálogo de medicamentos activos</caption>
+      <thead>
+        <tr><th scope="col">Nombre</th><th scope="col">Presentación</th><th scope="col">Categoría</th><th scope="col" class="numero">Precio mayorista (Bs)</th><th scope="col" class="numero">Stock</th><th scope="col">Acciones</th></tr>
+      </thead>
+      <tbody>
       <% medicamentos.forEach(m => { %>
       <tr>
-        <td><%= m.nombre %></td>
-        <td><%= m.presentacion %></td>
-        <td><%= m.categoria %></td>
-        <td class="numero"><%= m.precio_mayorista.toFixed(2) %></td>
-        <td class="numero"><%= m.stock %></td>
-        <td class="acciones">
-          <a class="boton chico secundario" href="/medicamentos/<%= m.id_medicamento %>">Ver</a>
-          <a class="boton chico secundario" href="/medicamentos/<%= m.id_medicamento %>/editar">Editar</a>
-          <form method="post" action="/medicamentos/<%= m.id_medicamento %>/desactivar" onsubmit="return confirm('¿Desea desactivar este medicamento?');">
-            <button class="boton chico peligro" type="submit">Desactivar</button>
+        <td data-label="Nombre" class="principal"><a href="/medicamentos/<%= m.id_medicamento %>"><%= m.nombre %></a></td>
+        <td data-label="Presentación"><%= m.presentacion %></td>
+        <td data-label="Categoría"><%= m.categoria %></td>
+        <td data-label="Precio (Bs)" class="numero"><%= m.precio_mayorista.toFixed(2) %></td>
+        <td data-label="Stock" class="numero"><span><%= m.stock %><% if (m.stock < STOCK_MINIMO) { %> <span class="estado bajo">Stock bajo</span><% } %></span></td>
+        <td data-label="Acciones" class="acciones">
+          <a class="boton chico secundario" href="/medicamentos/<%= m.id_medicamento %>" aria-label="Ver <%= m.nombre %>">Ver</a>
+          <a class="boton chico secundario" href="/medicamentos/<%= m.id_medicamento %>/editar" aria-label="Editar <%= m.nombre %>">Editar</a>
+          <form method="post" action="/medicamentos/<%= m.id_medicamento %>/desactivar" data-confirmar="¿Desea desactivar el medicamento «<%= m.nombre %>»? Ya no aparecerá en el catálogo, pero se conserva en los pedidos anteriores.">
+            <button class="boton chico peligro" type="submit" aria-label="Desactivar <%= m.nombre %>">Desactivar</button>
           </form>
         </td>
       </tr>
       <% }) %>
+      </tbody>
     </table>
     <div class="paginacion"><span><%= medicamentos.length %> medicamento(s) activo(s)</span></div>
     <% } %>
