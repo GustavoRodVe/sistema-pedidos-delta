@@ -51,7 +51,7 @@ app.use((req, res) => {
 });
 
 // Códigos que indican que MySQL no responde (servicio detenido, red o acceso).
-const ERRORES_CONEXION = ['ECONNREFUSED', 'ECONNRESET', 'ETIMEDOUT', 'PROTOCOL_CONNECTION_LOST', 'ER_ACCESS_DENIED_ERROR', 'ER_CON_COUNT_ERROR'];
+const ERRORES_CONEXION = ['ECONNREFUSED', 'ER_SERVER_SHUTDOWN', 'ECONNRESET', 'ETIMEDOUT', 'PROTOCOL_CONNECTION_LOST', 'ER_ACCESS_DENIED_ERROR', 'ER_CON_COUNT_ERROR'];
 
 // Manejo centralizado de errores: el detalle técnico queda en la consola
 // y al usuario solo se le muestra un mensaje general.
