@@ -350,7 +350,10 @@ Siguiendo la recomendación de la guía, trabajamos el frontend en una rama prop
 | 066c053 | Actualiza el README y agrega las evidencias del recorrido de la Actividad 3 |
 | bdbfd85 | Muestra la página sin conexión también cuando MySQL se está deteniendo |
 
-A estos se suma un último commit con este documento y su PDF.
+A estos se suma un commit con este documento y su PDF, y el commit de unión de la rama feature/frontend con main. Después de subir los cambios comprobamos en GitHub que los commits y las carpetas aparecieran correctamente.
+
+![Commits de la Actividad 3 en la rama main de GitHub](../../evidencias/actividad-3/capturas/35-github-commits.png)
+![Repositorio en GitHub con las dos ramas y la estructura de carpetas](../../evidencias/actividad-3/capturas/36-github-repositorio.png)
 
 El README se actualizó con la arquitectura del frontend, la tabla de pantallas y rutas, la estructura de carpetas y la forma de configurar el servidor con el archivo .env. Las evidencias de esta actividad están en la carpeta evidencias/actividad-3 (capturas, registro de la consola y resultados del recorrido) y el script que las genera, en la carpeta de herramientas del proyecto.
 
