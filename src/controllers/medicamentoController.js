@@ -2,6 +2,7 @@
 const Medicamento = require('../models/medicamentoModel');
 const Categoria = require('../models/categoriaModel');
 const { validarMedicamento } = require('../validators/medicamentoValidator');
+const { STOCK_MINIMO } = require('./inicioController');
 
 const MENSAJES = {
   registrado: 'El medicamento se registró correctamente.',
@@ -48,7 +49,7 @@ const medicamentoController = {
         Categoria.listar()
       ]);
       res.render('medicamentos/index', {
-        medicamentos, categorias, idCategoria, mensaje: MENSAJES[req.query.ok] || null
+        medicamentos, categorias, idCategoria, STOCK_MINIMO, mensaje: MENSAJES[req.query.ok] || null
       });
     } catch (err) {
       next(err);
@@ -93,7 +94,7 @@ const medicamentoController = {
       const id = leerId(req);
       const medicamento = id && await Medicamento.buscarPorId(id);
       if (!medicamento || !medicamento.activo) return noEncontrado(res);
-      res.render('medicamentos/detalle', { medicamento, mensaje: MENSAJES[req.query.ok] || null });
+      res.render('medicamentos/detalle', { medicamento, STOCK_MINIMO, mensaje: MENSAJES[req.query.ok] || null });
     } catch (err) {
       next(err);
     }

@@ -5,6 +5,7 @@ const express = require('express');
 const { probarConexion } = require('./config/db');
 const farmaciaRoutes = require('./routes/farmaciaRoutes');
 const medicamentoRoutes = require('./routes/medicamentoRoutes');
+const { inicioController } = require('./controllers/inicioController');
 
 const app = express();
 const PUERTO = Number(process.env.PORT) || 3000;
@@ -17,13 +18,26 @@ app.set('views', path.join(__dirname, 'views'));
 app.use(express.static(path.join(__dirname, '..', 'public')));
 app.use(express.urlencoded({ extended: false }));
 
-// Variable disponible en todas las vistas para marcar el menú activo
+// Registro de cada solicitud en la consola (método, ruta, código de respuesta y
+// tiempo). Sirve para comprobar que las acciones de la interfaz llegan al servidor.
 app.use((req, res, next) => {
-  res.locals.rutaActual = req.path;
+  if (req.path.startsWith('/css/') || req.path.startsWith('/js/') || req.path.startsWith('/img/')) return next();
+  const inicio = Date.now();
+  res.on('finish', () => {
+    console.log(`${req.method} ${req.originalUrl} -> ${res.statusCode} (${Date.now() - inicio} ms)`);
+  });
   next();
 });
 
-app.get('/', (req, res) => res.render('inicio'));
+// Variables disponibles en todas las vistas: ruta actual para marcar el menú
+// activo y dirección completa para el botón "Reintentar".
+app.use((req, res, next) => {
+  res.locals.rutaActual = req.path;
+  res.locals.urlActual = req.originalUrl;
+  next();
+});
+
+app.get('/', inicioController.panel);
 app.use('/farmacias', farmaciaRoutes);
 app.use('/medicamentos', medicamentoRoutes);
 
@@ -36,10 +50,19 @@ app.use((req, res) => {
   });
 });
 
+// Códigos que indican que MySQL no responde (servicio detenido, red o acceso).
+const ERRORES_CONEXION = ['ECONNREFUSED', 'ECONNRESET', 'ETIMEDOUT', 'PROTOCOL_CONNECTION_LOST', 'ER_ACCESS_DENIED_ERROR', 'ER_CON_COUNT_ERROR'];
+
 // Manejo centralizado de errores: el detalle técnico queda en la consola
 // y al usuario solo se le muestra un mensaje general.
 app.use((err, req, res, next) => {
-  console.error(`[${new Date().toISOString()}] Error en ${req.method} ${req.originalUrl}:`, err.message);
+  console.error(`[${new Date().toISOString()}] Error en ${req.method} ${req.originalUrl}:`, err.code || err.message);
+  if (ERRORES_CONEXION.includes(err.code)) {
+    // Para reintentar se vuelve a pedir la misma página; si era un envío de
+    // formulario se vuelve a la página anterior para no reenviar datos.
+    const reintentar = req.method === 'GET' ? req.originalUrl : (req.get('Referer') || '/');
+    return res.status(503).render('errores/sin-conexion', { reintentar });
+  }
   res.status(500).render('errores/500');
 });
 

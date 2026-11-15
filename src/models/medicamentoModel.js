@@ -18,6 +18,21 @@ const Medicamento = {
     return filas;
   },
 
+  async contarActivos() {
+    const [filas] = await pool.query('SELECT COUNT(*) AS total FROM medicamento WHERE activo = 1');
+    return filas[0].total;
+  },
+
+  // Medicamentos activos cuyo stock está por debajo del mínimo indicado.
+  async listarStockBajo(minimo) {
+    const [filas] = await pool.query(
+      `SELECT id_medicamento, nombre, presentacion, stock
+       FROM medicamento WHERE activo = 1 AND stock < ? ORDER BY stock`,
+      [minimo]
+    );
+    return filas;
+  },
+
   async buscarPorId(id) {
     const [filas] = await pool.query(
       `SELECT m.id_medicamento, m.nombre, m.presentacion, m.id_categoria, m.precio_mayorista,
