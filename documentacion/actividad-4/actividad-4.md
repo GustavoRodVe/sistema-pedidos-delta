@@ -61,6 +61,11 @@ Las pruebas se ejecutaron el 23 de noviembre de 2026 contra el servidor local (h
 | PF-13 | Nombre con etiqueta &lt;script> (inyección HTML) | Se muestra como texto escapado | escapado | Correcto |
 | PF-14 | Registrar de nuevo el NIT de una farmacia desactivada (regresión ERR-01) | Se reactiva con los datos nuevos (ok=reactivada) | 302 /farmacias?ok=reactivada; Farmacia Reabierta 2682276, activo=1 | Correcto |
 
+Las capturas muestran cómo ve el usuario dos de los casos de rechazo. Para que la prueba llegue al servidor desactivamos antes la validación del navegador; así comprobamos que, aunque alguien la salte, el servidor no guarda el dato y marca el campo con el error.
+
+![PF-04: el servidor rechaza un NIT con letras](../../evidencias/actividad-4/capturas/09-pf04-nit-invalido.png)
+![PF-09 y PF-10: precio cero y stock negativo rechazados](../../evidencias/actividad-4/capturas/10-pf09-pf10-medicamento.png)
+
 ## 2.6 Pruebas de integración
 
 Los casos PI-01 a PI-04 recorren el camino completo dentro del servidor: el formulario envía los datos, el controlador los valida, el modelo ejecuta la consulta y la fila queda en MySQL. Los casos PI-05 y PI-06 se ejecutaron contra la URL pública y prueban la integración entre el túnel HTTPS, el servidor y la base: un registro hecho desde Internet aparece en la base local.
@@ -81,7 +86,7 @@ La primera ejecución dio 19 de 19 casos correctos. Como un plan que no encuentr
 | ID | Descripción | Pasos para reproducir | Severidad | Estado |
 |---|---|---|---|---|
 | ERR-01 | No se puede volver a registrar una farmacia que fue desactivada. El sistema responde "Ya existe una farmacia registrada con este NIT", pero esa farmacia no aparece en el listado ni se puede editar, así que el NIT queda bloqueado para siempre. | Desactivar una farmacia y registrar otra con el mismo NIT. | Media | Corregido |
-| ERR-02 | Al detener MySQL mientras se usaba el sistema, algunas solicitudes mostraban el error 500 en vez de la página "sin conexión" (código ER_SERVER_SHUTDOWN). | Detener MySQL con el sistema abierto y enviar un formulario. | Baja | Corregido en la Actividad 3, verificado de nuevo |
+| ERR-02 | Al detener MySQL mientras se usaba el sistema, algunas solicitudes mostraban el error 500 en vez de la página "sin conexión" (código ER_SERVER_SHUTDOWN). | Detener MySQL con el sistema abierto y enviar un formulario. | Baja | Corregido en la Actividad 3 (registrado aquí como antecedente) |
 
 El ERR-01 viene de una decisión del diseño: el NIT es único en la tabla aunque la farmacia esté inactiva, lo cual es correcto porque un NIT identifica a un solo contribuyente, pero el controlador no tenía en cuenta que el registro repetido podía ser el de un cliente que vuelve.
 
@@ -99,7 +104,10 @@ if (err.code === 'ER_DUP_ENTRY') {
 
 Después de la corrección agregamos el caso PF-14 al plan y volvimos a ejecutar todas las pruebas: 20 de 20 correctas, con lo que se comprueba que el arreglo funciona y que no rompió nada más (el caso PF-05, NIT repetido de una farmacia activa, sigue dando el error esperado).
 
-![Registro con el NIT de una farmacia desactivada después de la corrección, hecho desde la URL pública](../../evidencias/actividad-4/capturas/07-err01-corregido.png "ancho")
+Para dejar evidencia del antes y el después, levantamos la versión anterior del código (commit 9665bed) en el puerto 3001 e hicimos el mismo registro en las dos versiones, con el NIT de una farmacia que el plan había desactivado.
+
+![Antes de la corrección: el sistema bloquea el NIT de una farmacia que ya no aparece en el listado](../../evidencias/actividad-4/capturas/08-err01-antes.png)
+![Después de la corrección: la farmacia se reactiva con los datos ingresados (registro hecho desde la URL pública)](../../evidencias/actividad-4/capturas/07-err01-corregido.png)
 
 ## 2.9 Preparación del entorno de despliegue
 
@@ -122,7 +130,15 @@ Con la aplicación corriendo, iniciamos el túnel con el siguiente comando:
 npx cloudflared tunnel --url http://localhost:3000
 ```
 
-Cloudflared se conecta a la red de Cloudflare y asigna una dirección pública con certificado HTTPS. La dirección obtenida para esta entrega fue https://bedroom-try-amendment-matching.trycloudflare.com. El túnel rápido cambia de dirección cada vez que se inicia y solo está disponible mientras el equipo está encendido, por lo que para la defensa se vuelve a levantar con el mismo comando. Para las actividades 5 y 6 la idea es pasar a un servicio en la nube con la base alojada, aprovechando que la configuración ya se lee desde variables de entorno (PORT y los datos de conexión).
+Cloudflared se conecta a la red de Cloudflare y asigna una dirección pública con certificado HTTPS. La dirección obtenida para esta entrega fue https://bedroom-try-amendment-matching.trycloudflare.com. Este es el registro de cloudflared al iniciar el túnel:
+
+```
+2026-11-23T14:01:49Z INF Requesting new quick Tunnel on trycloudflare.com...
+2026-11-23T14:01:55Z INF |  https://bedroom-try-amendment-matching.trycloudflare.com  |
+2026-11-23T14:01:56Z INF Registered tunnel connection connIndex=0 location=lpb01 protocol=quic
+```
+
+La conexión quedó registrada en el nodo lpb01 de Cloudflare (La Paz), el más cercano. El túnel rápido cambia de dirección cada vez que se inicia y solo está disponible mientras el equipo está encendido, por lo que para la defensa se vuelve a levantar con el mismo comando. Para las actividades 5 y 6 la idea es pasar a un servicio en la nube con la base alojada, aprovechando que la configuración ya se lee desde variables de entorno (PORT y los datos de conexión).
 
 ## 2.11 Verificación del sistema desplegado
 
@@ -148,6 +164,17 @@ En la primera ejecución pasaron los 19 casos diseñados al inicio. Las pruebas 
 ## 2.13 Repositorio GitHub actualizado
 
 El repositorio https://github.com/GustavoRodVe/sistema-pedidos-delta se actualizó con la corrección del ERR-01, el script de pruebas (pruebas/pruebas-act4.cjs), los resultados en formato JSON, las capturas de esta actividad (evidencias/actividad-4) y este documento (documentacion/actividad-4). El archivo .env con las credenciales no forma parte del repositorio.
+
+| Commit | Descripción |
+| --- | --- |
+| 9665bed | Agrega al documento de la Actividad 3 las capturas del repositorio en GitHub |
+| 1d040b8 | Reactiva la farmacia desactivada al registrar de nuevo su NIT y agrega el plan de pruebas de la Actividad 4 |
+
+Después de subir los cambios revisamos en GitHub que aparecieran la carpeta pruebas, las evidencias y el cambio en el controlador y el modelo de farmacias.
+
+![Repositorio en GitHub con la carpeta pruebas nueva](../../evidencias/actividad-4/capturas/11-github-repositorio.png)
+![Historial de commits de la rama main](../../evidencias/actividad-4/capturas/12-github-commits.png)
+![Detalle del commit con la corrección del ERR-01](../../evidencias/actividad-4/capturas/13-github-commit-correccion.png)
 
 # 3. Conclusiones
 
