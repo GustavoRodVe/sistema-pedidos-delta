@@ -1,0 +1,174 @@
+{
+  "fecha": "2026-11-23T14:04:55.431Z",
+  "publica": "https://bedroom-try-amendment-matching.trycloudflare.com",
+  "resultados": [
+    {
+      "id": "PF-01",
+      "tipo": "Funcional",
+      "caso": "Abrir el panel principal",
+      "esperado": "200 y panel visible",
+      "obtenido": "200",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-02",
+      "tipo": "Funcional",
+      "caso": "Listar farmacias",
+      "esperado": "200 con tabla de farmacias",
+      "obtenido": "200",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-03",
+      "tipo": "Funcional",
+      "caso": "Registrar farmacia con datos válidos",
+      "esperado": "Redirección a /farmacias?ok=registrada",
+      "obtenido": "302 /farmacias?ok=registrada",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-04",
+      "tipo": "Funcional",
+      "caso": "Registrar farmacia con NIT no numérico",
+      "esperado": "Formulario con error del NIT, sin guardar",
+      "obtenido": "422, mensaje: sí",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-05",
+      "tipo": "Funcional",
+      "caso": "Registrar farmacia con NIT repetido",
+      "esperado": "Mensaje de NIT ya registrado",
+      "obtenido": "409",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-06",
+      "tipo": "Funcional",
+      "caso": "Registrar farmacia con zona fuera de la lista",
+      "esperado": "Error de zona no válida",
+      "obtenido": "422",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-07",
+      "tipo": "Funcional",
+      "caso": "Editar teléfono de la farmacia",
+      "esperado": "Redirección con ok=actualizada",
+      "obtenido": "302 /farmacias/21?ok=actualizada",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-08",
+      "tipo": "Funcional",
+      "caso": "Registrar medicamento válido",
+      "esperado": "Redirección con ok",
+      "obtenido": "302 /medicamentos?ok=registrado",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-09",
+      "tipo": "Funcional",
+      "caso": "Registrar medicamento con stock negativo",
+      "esperado": "Error de stock",
+      "obtenido": "422",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-10",
+      "tipo": "Funcional",
+      "caso": "Registrar medicamento con precio cero",
+      "esperado": "Error de precio",
+      "obtenido": "422",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-11",
+      "tipo": "Funcional",
+      "caso": "Abrir una ruta inexistente",
+      "esperado": "Página 404",
+      "obtenido": "404",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-12",
+      "tipo": "Funcional",
+      "caso": "Abrir farmacia con id no numérico",
+      "esperado": "Página 404, sin error 500",
+      "obtenido": "404",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-13",
+      "tipo": "Funcional",
+      "caso": "Nombre con etiqueta <script> (inyección HTML)",
+      "esperado": "Se muestra como texto escapado",
+      "obtenido": "escapado",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-01",
+      "tipo": "Integración",
+      "caso": "Formulario, controlador, modelo y MySQL guardan la farmacia",
+      "esperado": "Fila con Farmacia Prueba 2682276, 4 4259999, Centro, 1",
+      "obtenido": "Farmacia Prueba 2682276, 4 4259999, Centro, 1",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-02",
+      "tipo": "Integración",
+      "caso": "Los datos rechazados no llegan a la base",
+      "esperado": "0 filas",
+      "obtenido": "0 filas",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-03",
+      "tipo": "Integración",
+      "caso": "Desactivar farmacia (borrado lógico) y que salga del listado",
+      "esperado": "activo = 0 y no aparece",
+      "obtenido": "activo = 0, en listado: no",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-14",
+      "tipo": "Funcional",
+      "caso": "Registrar de nuevo el NIT de una farmacia desactivada (regresión ERR-01)",
+      "esperado": "Se reactiva con los datos nuevos (ok=reactivada)",
+      "obtenido": "302 /farmacias?ok=reactivada; Farmacia Reabierta 2682276, activo=1",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-04",
+      "tipo": "Integración",
+      "caso": "Listado de medicamentos une medicamento y categoría",
+      "esperado": "Muestra Paracetamol Prueba 2682276 con Analgésicos",
+      "obtenido": "sí",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-05",
+      "tipo": "Integración",
+      "caso": "Sistema desplegado responde por HTTPS desde Internet",
+      "esperado": "200",
+      "obtenido": "200",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-06",
+      "tipo": "Integración",
+      "caso": "Registro hecho en la URL pública llega a MySQL",
+      "esperado": "302 y 1 fila en la base",
+      "obtenido": "302, 1 fila",
+      "estado": "Correcto"
+    }
+  ],
+  "capturas": [
+    "01-desplegado-panel.png",
+    "02-desplegado-farmacias.png",
+    "03-desplegado-medicamentos.png",
+    "04-desplegado-celular.png",
+    "05-desplegado-404.png",
+    "06-escapado-script.png"
+  ]
+}

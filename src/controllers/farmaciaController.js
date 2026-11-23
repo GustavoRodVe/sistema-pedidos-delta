@@ -5,6 +5,7 @@ const { validarFarmacia, ZONAS } = require('../validators/farmaciaValidator');
 
 const MENSAJES = {
   registrada: 'La farmacia se registró correctamente.',
+  reactivada: 'Ese NIT pertenecía a una farmacia desactivada; se volvió a activar con los datos ingresados.',
   actualizada: 'Los datos de la farmacia se actualizaron correctamente.',
   desactivada: 'La farmacia fue desactivada. Su historial de pedidos se conserva.'
 };
@@ -55,6 +56,13 @@ const farmaciaController = {
       res.redirect('/farmacias?ok=registrada');
     } catch (err) {
       if (err.code === 'ER_DUP_ENTRY') {
+        // Si el NIT era de una farmacia desactivada, se reactiva en lugar de
+        // bloquear el registro (antes quedaba un NIT imposible de volver a usar).
+        try {
+          if (await Farmacia.reactivarPorNit(datos)) return res.redirect('/farmacias?ok=reactivada');
+        } catch (err2) {
+          return next(err2);
+        }
         return mostrarFormulario(res, {
           farmacia: datos,
           errores: { nit: 'Ya existe una farmacia registrada con este NIT.' },

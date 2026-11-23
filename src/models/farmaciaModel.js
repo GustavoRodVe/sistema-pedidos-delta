@@ -51,6 +51,19 @@ const Farmacia = {
     return resultado.affectedRows;
   },
 
+  // Si el NIT pertenece a una farmacia desactivada, la vuelve a activar con los
+  // datos nuevos (corrección ERR-01 de la Actividad 4). Devuelve 0 si no había
+  // una farmacia inactiva con ese NIT.
+  async reactivarPorNit(datos) {
+    const [resultado] = await pool.query(
+      `UPDATE farmacia
+       SET nombre = ?, responsable = ?, telefono = ?, direccion = ?, zona = ?, activo = 1
+       WHERE nit = ? AND activo = 0`,
+      [datos.nombre, datos.responsable, datos.telefono, datos.direccion, datos.zona, datos.nit]
+    );
+    return resultado.affectedRows;
+  },
+
   // Eliminación lógica: la fila se conserva porque puede tener pedidos asociados.
   async desactivar(id) {
     const [resultado] = await pool.query(
