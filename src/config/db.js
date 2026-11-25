@@ -33,7 +33,12 @@ const pool = mysql.createPool({
 
 // Bolivia está en UTC-4 y no cambia de hora en verano. El servidor en la nube
 // trabaja en UTC, así que cada conexión fija la zona para que NOW() guarde la hora local.
-pool.on('connection', (conexion) => conexion.query("SET time_zone = '-04:00'"));
+// Además Aiven viene con el modo ANSI (comillas dobles como nombres, || como concatenación);
+// se usa el modo por defecto de MySQL 8 para que la base local y la de la nube se comporten igual.
+pool.on('connection', (conexion) => {
+  conexion.query("SET time_zone = '-04:00'");
+  conexion.query("SET SESSION sql_mode = 'ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION'");
+});
 
 // Se usa al iniciar la aplicación para confirmar que la base responde.
 async function probarConexion() {
