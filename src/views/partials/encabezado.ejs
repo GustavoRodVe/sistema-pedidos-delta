@@ -16,17 +16,28 @@
     <span class="nombre">Laboratorio Químico Delta</span>
     <span class="sistema">Sistema de Pedidos Mayoristas</span>
   </a>
+  <% if (typeof usuario !== 'undefined' && usuario) { %>
+  <div class="usuario-sesion">
+    <span class="datos-usuario"><span class="nombre-usuario"><%= usuario.nombre_completo %></span><span class="rol-usuario"><%= usuario.rol %></span></span>
+    <form method="post" action="/logout"><button class="boton chico secundario" type="submit">Cerrar sesión</button></form>
+  </div>
   <button class="boton-menu" type="button" aria-controls="menu-principal" aria-expanded="false">
     <span class="icono-menu" aria-hidden="true"></span>Menú
   </button>
+  <% } %>
 </header>
 <div class="contenedor">
+  <% if (typeof usuario !== 'undefined' && usuario) { %>
+  <%# El menú muestra solo los módulos del rol. El servidor igual comprueba el permiso en cada ruta. %>
   <nav class="menu" id="menu-principal" aria-label="Menú principal">
     <a href="/"<%- rutaActual === '/' ? ' class="activo" aria-current="page"' : '' %>>Inicio</a>
     <div class="grupo">Ventas</div>
+    <% if (tieneRol(ROLES.ADMIN, ROLES.VENTAS)) { %>
     <a href="/farmacias"<%- rutaActual.startsWith('/farmacias') ? ' class="activo" aria-current="page"' : '' %>>Farmacias</a>
+    <% } %>
     <div class="grupo">Catálogo</div>
     <a href="/medicamentos"<%- rutaActual.startsWith('/medicamentos') ? ' class="activo" aria-current="page"' : '' %>>Medicamentos</a>
   </nav>
+  <% } %>
   <main class="contenido" id="contenido" tabindex="-1">
     <div class="cargando" role="status" aria-live="polite" hidden><span class="giro" aria-hidden="true"></span><span class="texto-cargando">Cargando...</span></div>

@@ -98,6 +98,8 @@ function prepararConfirmacion() {
       e.preventDefault();
       formPendiente = form;
       document.getElementById('modal-texto').textContent = form.dataset.confirmar;
+      // El botón dice "Sí, desactivar" salvo que el formulario indique otro texto (despachar, anular...).
+      modal.querySelector('[data-accion=confirmar]').textContent = form.dataset.confirmarBoton || 'Sí, desactivar';
       modal.showModal();
       modal.querySelector('[data-accion=cancelar]').focus();
     });
@@ -112,7 +114,7 @@ function prepararConfirmacion() {
     e.currentTarget.disabled = true; // evita confirmar dos veces
     formPendiente.dataset.confirmado = 'si';
     bloquearEnvio(formPendiente);
-    mostrarCargando('Desactivando...');
+    mostrarCargando(formPendiente.dataset.cargando || 'Desactivando...');
     modal.close();
     formPendiente.submit();
   });

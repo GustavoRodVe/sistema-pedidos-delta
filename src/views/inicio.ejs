@@ -3,11 +3,19 @@
     <p class="subtitulo">Resumen del día con datos obtenidos de la base de datos.</p>
 
     <div class="tarjetas">
+      <% if (tieneRol(ROLES.ADMIN, ROLES.VENTAS)) { %>
       <a class="indicador" href="/farmacias">
         <div class="valor"><%= totalFarmacias %></div>
         <div class="etiqueta">Farmacias activas</div>
         <div class="texto">Ver el listado de farmacias clientes</div>
       </a>
+      <% } else { %>
+      <div class="indicador">
+        <div class="valor"><%= totalFarmacias %></div>
+        <div class="etiqueta">Farmacias activas</div>
+        <div class="texto">Farmacias clientes del laboratorio</div>
+      </div>
+      <% } %>
       <a class="indicador" href="/medicamentos">
         <div class="valor"><%= totalMedicamentos %></div>
         <div class="etiqueta">Medicamentos en catálogo</div>
@@ -24,9 +32,10 @@
       <section class="tarjeta">
         <h2>Accesos rápidos</h2>
         <div class="accesos">
-          <a class="boton" href="/farmacias/nueva">Registrar farmacia</a>
-          <a class="boton" href="/medicamentos/nuevo">Registrar medicamento</a>
-          <a class="boton secundario" href="/farmacias">Buscar farmacia</a>
+          <% if (tieneRol(ROLES.ADMIN, ROLES.VENTAS)) { %><a class="boton" href="/farmacias/nueva">Registrar farmacia</a><% } %>
+          <% if (tieneRol(ROLES.ADMIN)) { %><a class="boton" href="/medicamentos/nuevo">Registrar medicamento</a><% } %>
+          <% if (tieneRol(ROLES.ADMIN, ROLES.VENTAS)) { %><a class="boton secundario" href="/farmacias">Buscar farmacia</a><% } %>
+          <a class="boton secundario" href="/medicamentos">Ver medicamentos</a>
         </div>
       </section>
       <section class="tarjeta">

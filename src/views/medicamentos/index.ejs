@@ -12,7 +12,7 @@
         <button class="boton secundario" type="submit">Filtrar</button>
         <% if (idCategoria) { %><a href="/medicamentos">Quitar filtro</a><% } %>
       </form>
-      <a class="boton" href="/medicamentos/nuevo">Nuevo medicamento</a>
+      <% if (tieneRol(ROLES.ADMIN)) { %><a class="boton" href="/medicamentos/nuevo">Nuevo medicamento</a><% } %>
     </div>
     <% if (medicamentos.length === 0) { %>
       <div class="vacio-bloque">
@@ -21,7 +21,7 @@
           <a class="boton secundario" href="/medicamentos">Ver todas las categorías</a>
         <% } else { %>
           <p>Todavía no hay medicamentos registrados en el catálogo.</p>
-          <a class="boton" href="/medicamentos/nuevo">Registrar el primer medicamento</a>
+          <% if (tieneRol(ROLES.ADMIN)) { %><a class="boton" href="/medicamentos/nuevo">Registrar el primer medicamento</a><% } %>
         <% } %>
       </div>
     <% } else { %>
@@ -40,10 +40,12 @@
         <td data-label="Stock" class="numero"><span><%= m.stock %><% if (m.stock < STOCK_MINIMO) { %> <span class="estado bajo">Stock bajo</span><% } %></span></td>
         <td data-label="Acciones" class="acciones">
           <a class="boton chico secundario" href="/medicamentos/<%= m.id_medicamento %>" aria-label="Ver <%= m.nombre %>">Ver</a>
+          <% if (tieneRol(ROLES.ADMIN)) { %>
           <a class="boton chico secundario" href="/medicamentos/<%= m.id_medicamento %>/editar" aria-label="Editar <%= m.nombre %>">Editar</a>
           <form method="post" action="/medicamentos/<%= m.id_medicamento %>/desactivar" data-confirmar="¿Desea desactivar el medicamento «<%= m.nombre %>»? Ya no aparecerá en el catálogo, pero se conserva en los pedidos anteriores.">
             <button class="boton chico peligro" type="submit" aria-label="Desactivar <%= m.nombre %>">Desactivar</button>
           </form>
+          <% } %>
         </td>
       </tr>
       <% }) %>

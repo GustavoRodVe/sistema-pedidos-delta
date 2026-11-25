@@ -123,4 +123,10 @@ INSERT INTO farmacia (nombre, nit, responsable, telefono, direccion, zona) VALUE
 ('Farmacia Sud de Prueba', '1000000033', NULL, '70000003', 'Calle Ejemplo 300', 'Sud'),
 ('Farmacia Quillacollo de Prueba', '1000000044', 'Responsable de prueba cuatro', '70000004', 'Avenida Ejemplo 400', 'Quillacollo');
 
--- No se insertan usuarios: el primer Administrador se crea cuando exista el hash de contraseñas (RNF-02, Actividad 3).
+-- Usuarios de prueba, uno por rol. La contraseña (que está en el README) se guarda
+-- como hash bcrypt, nunca en texto. Los valores de id_rol (1 a 3) siguen el orden
+-- de inserción de los roles de arriba.
+INSERT INTO usuario (nombre_completo, correo, clave_hash, id_rol) VALUES
+('Administrador de Prueba', 'admin@delta.test', '$2b$10$zOPT84AMQXjjJlSObcyNw.umdTRDdIRPG1ywRVBgmgICPYPUsVQue', 1),
+('Ejecutivo de Ventas de Prueba', 'ventas@delta.test', '$2b$10$8C7qxtu1HL1hph34aOn7seiLYvZgu/dXw9bJnVLqdL9HF9j54ML9q', 2),
+('Encargado de Almacén de Prueba', 'almacen@delta.test', '$2b$10$8Yo41AZZpaPbLMJKkOGmy.t2Id5BhJ/9aB8jvOi5HGaROK4PjQwFa', 3);

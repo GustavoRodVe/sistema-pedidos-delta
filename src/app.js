@@ -2,13 +2,29 @@
 require('dotenv').config({ quiet: true });
 const path = require('path');
 const express = require('express');
+const session = require('express-session');
 const { probarConexion } = require('./config/db');
+const { ROLES, cargarUsuario, requiereSesion, permitirRoles } = require('./middlewares/autenticacion');
+const sesionRoutes = require('./routes/sesionRoutes');
 const farmaciaRoutes = require('./routes/farmaciaRoutes');
 const medicamentoRoutes = require('./routes/medicamentoRoutes');
 const { inicioController } = require('./controllers/inicioController');
 
 const app = express();
 const PUERTO = Number(process.env.PORT) || 3000;
+const produccion = process.env.NODE_ENV === 'production';
+
+// En producción la cookie de sesión se firma con SESSION_SECRET. Si faltara, se
+// usaría la clave de desarrollo, que es pública en GitHub, así que mejor no arrancar.
+if (produccion && !process.env.SESSION_SECRET) {
+  console.error('Falta SESSION_SECRET. En producción debe definirse como variable de entorno.');
+  process.exit(1);
+}
+
+// Render (y servicios parecidos) reciben el HTTPS y reenvían la solicitud al
+// servidor por HTTP. Con trust proxy Express sabe que la conexión original era segura,
+// lo que necesita la cookie con secure.
+if (produccion) app.set('trust proxy', 1);
 
 // Motor de vistas EJS
 app.set('view engine', 'ejs');
@@ -16,6 +32,18 @@ app.set('views', path.join(__dirname, 'views'));
 
 // Archivos estáticos (CSS) y lectura de formularios
 app.use(express.static(path.join(__dirname, '..', 'public')));
+
+// Sesión: la cookie solo lleva el identificador y los datos quedan en la memoria del
+// servidor (se pierden al reiniciar, algo aceptable en este proyecto académico).
+// httpOnly impide que un script de la página lea la cookie y sameSite lax evita que
+// se envíe en formularios puestos en otros sitios.
+app.use(session({
+  secret: process.env.SESSION_SECRET || 'clave-solo-para-desarrollo',
+  resave: false,
+  saveUninitialized: false,
+  cookie: { httpOnly: true, sameSite: 'lax', secure: produccion, maxAge: 8 * 60 * 60 * 1000 }
+}));
+app.use(cargarUsuario);
 app.use(express.urlencoded({ extended: false }));
 
 // Registro de cada solicitud en la consola (método, ruta, código de respuesta y
@@ -37,8 +65,13 @@ app.use((req, res, next) => {
   next();
 });
 
+// El login y el logout se montan antes de requiereSesion: si no, nadie podría
+// llegar al formulario para iniciar sesión. Todo lo que sigue exige haber ingresado.
+app.use(sesionRoutes);
+app.use(requiereSesion);
+
 app.get('/', inicioController.panel);
-app.use('/farmacias', farmaciaRoutes);
+app.use('/farmacias', permitirRoles(ROLES.ADMIN, ROLES.VENTAS), farmaciaRoutes);
 app.use('/medicamentos', medicamentoRoutes);
 
 // Ruta inexistente

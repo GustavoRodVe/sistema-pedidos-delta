@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Iniciar sesión - Sistema de Pedidos Mayoristas</title>
+<link rel="icon" href="/img/logo-delta.svg" type="image/svg+xml">
+<link rel="stylesheet" href="/css/estilos.css">
+<script src="/js/app.js" defer></script>
+</head>
+<body class="pagina-login">
+<%# Página independiente: no usa el encabezado con menú porque todavía no hay sesión. %>
+<main class="tarjeta-login">
+  <img src="/img/logo-delta.svg" alt="" width="48" height="48">
+  <h1>Laboratorio Químico Delta</h1>
+  <p class="subtitulo">Sistema de Pedidos Mayoristas</p>
+  <% if (error) { %>
+  <div class="alerta error" role="alert"><span><%= error %></span></div>
+  <% } %>
+  <form method="post" action="/login" data-cargando="Ingresando...">
+    <div class="campo">
+      <label for="correo">Correo</label>
+      <input type="email" id="correo" name="correo" value="<%= correo %>" autocomplete="username" maxlength="100" required>
+    </div>
+    <div class="campo">
+      <label for="clave">Contraseña</label>
+      <input type="password" id="clave" name="clave" autocomplete="current-password" maxlength="72" required>
+    </div>
+    <button class="boton" type="submit">Ingresar</button>
+  </form>
+</main>
+</body>
+</html>

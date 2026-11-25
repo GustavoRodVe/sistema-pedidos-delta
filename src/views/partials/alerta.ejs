@@ -1,7 +1,14 @@
-<%# Mensaje de confirmación después de registrar, editar o desactivar. No se oculta solo: el usuario lo cierra. %>
-<% if (mensaje) { %>
+<%# Mensajes al usuario. "mensaje" es la confirmación después de registrar, editar o desactivar;
+    "error" (opcional) avisa que la acción no se pudo hacer. No se ocultan solos: el usuario los cierra. %>
+<% if (typeof mensaje !== 'undefined' && mensaje) { %>
 <div class="alerta exito" role="status">
   <span><strong>Listo.</strong> <%= mensaje %></span>
+  <button class="cerrar" type="button" aria-label="Cerrar mensaje">&times;</button>
+</div>
+<% } %>
+<% if (typeof error !== 'undefined' && error) { %>
+<div class="alerta error" role="alert">
+  <span><%= error %></span>
   <button class="cerrar" type="button" aria-label="Cerrar mensaje">&times;</button>
 </div>
 <% } %>
