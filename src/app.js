@@ -8,6 +8,7 @@ const { ROLES, cargarUsuario, requiereSesion, permitirRoles } = require('./middl
 const sesionRoutes = require('./routes/sesionRoutes');
 const farmaciaRoutes = require('./routes/farmaciaRoutes');
 const medicamentoRoutes = require('./routes/medicamentoRoutes');
+const pedidoRoutes = require('./routes/pedidoRoutes');
 const { inicioController } = require('./controllers/inicioController');
 
 const app = express();
@@ -73,6 +74,7 @@ app.use(requiereSesion);
 app.get('/', inicioController.panel);
 app.use('/farmacias', permitirRoles(ROLES.ADMIN, ROLES.VENTAS), farmaciaRoutes);
 app.use('/medicamentos', medicamentoRoutes);
+app.use('/pedidos', pedidoRoutes);
 
 // Ruta inexistente
 app.use((req, res) => {

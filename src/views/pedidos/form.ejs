@@ -1,0 +1,57 @@
+<%- include('../partials/encabezado', { titulo: 'Registrar pedido' }) %>
+    <nav class="migas" aria-label="Ubicación"><a href="/pedidos">Pedidos</a> / <span>Nuevo pedido</span></nav>
+    <h1>Registrar pedido</h1>
+    <p class="subtitulo">Elija la farmacia y agregue los medicamentos. Los campos marcados con <span class="obligatorio">*</span> son obligatorios.</p>
+    <% if (Object.keys(errores).length > 0) { %>
+    <div class="alerta error resumen-errores" role="alert">No se guardó el pedido. Revise los campos marcados en rojo.</div>
+    <% } %>
+    <div class="tarjeta">
+      <%# Sin data-validar: la validación de este formulario la hace el servidor. %>
+      <form method="post" action="/pedidos" novalidate data-cargando="Guardando el pedido...">
+        <div class="fila">
+          <%- include('../partials/campo', { id: 'id_farmacia', etiqueta: 'Farmacia', valor: pedido.id_farmacia, errores, obligatorio: true, opciones: farmacias.map(f => ({ valor: f.id_farmacia, texto: f.nombre + ' (NIT ' + f.nit + ')' })) }) %>
+          <%- include('../partials/campo', { id: 'observacion', etiqueta: 'Observación', valor: pedido.observacion, errores, ayuda: 'Opcional. Máximo 255 caracteres.', atributos: 'maxlength="255"' }) %>
+        </div>
+
+        <h2>Medicamentos del pedido</h2>
+        <div class="campo<%= errores.lineas ? ' error' : '' %>">
+          <% if (errores.lineas) { %><div class="mensaje-error"><%= errores.lineas %></div><% } %>
+          <table class="lineas-pedido">
+            <caption class="oculto">Medicamentos del pedido</caption>
+            <thead>
+              <tr><th scope="col">Medicamento</th><th scope="col">Cantidad</th><th scope="col" class="numero">Subtotal (Bs)</th><th scope="col"><span class="oculto">Quitar</span></th></tr>
+            </thead>
+            <tbody>
+            <% pedido.lineas.forEach(l => { %>
+              <tr class="linea">
+                <td>
+                  <select name="id_medicamento" aria-label="Medicamento">
+                    <option value="" data-precio="0">Seleccione...</option>
+                    <% medicamentos.forEach(m => { %><option value="<%= m.id_medicamento %>" data-precio="<%= m.precio_mayorista %>"<%= String(m.id_medicamento) === String(l.id_medicamento) ? ' selected' : '' %>><%= m.nombre %> <%= m.presentacion %> - Bs <%= m.precio_mayorista.toFixed(2) %> (stock <%= m.stock %>)</option><% }) %>
+                  </select>
+                </td>
+                <td>
+                  <input type="number" name="cantidad" aria-label="Cantidad" min="1" max="99999" step="1" inputmode="numeric" value="<%= l.cantidad %>">
+                </td>
+                <td class="numero subtotal">0.00</td>
+                <td><button class="boton chico secundario quitar" type="button">Quitar</button></td>
+              </tr>
+            <% }) %>
+            </tbody>
+          </table>
+          <div class="acciones fila-agregar">
+            <button class="boton secundario" type="button" id="agregar-linea">Agregar medicamento</button>
+          </div>
+        </div>
+
+        <p class="total-pedido">Total estimado: Bs <span id="total-estimado">0.00</span></p>
+        <p class="ayuda">Es solo una referencia. Al guardar, el sistema vuelve a calcular el total con el precio vigente de cada medicamento.</p>
+
+        <div class="acciones">
+          <button class="boton" type="submit">Guardar pedido</button>
+          <a class="boton secundario" href="/pedidos">Cancelar</a>
+        </div>
+      </form>
+    </div>
+    <script src="/js/pedidos.js" defer></script>
+<%- include('../partials/pie') %>

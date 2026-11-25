@@ -35,6 +35,7 @@
     <% if (tieneRol(ROLES.ADMIN, ROLES.VENTAS)) { %>
     <a href="/farmacias"<%- rutaActual.startsWith('/farmacias') ? ' class="activo" aria-current="page"' : '' %>>Farmacias</a>
     <% } %>
+    <a href="/pedidos"<%- rutaActual.startsWith('/pedidos') ? ' class="activo" aria-current="page"' : '' %>>Pedidos</a>
     <div class="grupo">Catálogo</div>
     <a href="/medicamentos"<%- rutaActual.startsWith('/medicamentos') ? ' class="activo" aria-current="page"' : '' %>>Medicamentos</a>
   </nav>

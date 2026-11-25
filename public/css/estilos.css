@@ -125,6 +125,11 @@ input, select, textarea { width: 100%; padding: 8px 10px; border: 1px solid var(
 
 .estado { display: inline-block; padding: 2px 9px; border-radius: 10px; font-size: 12px; font-weight: 600; white-space: nowrap; }
 .estado.bajo { background: #fff3cd; color: var(--amarillo); border: 1px solid #f2d48a; }
+/* Estados de un pedido */
+.estado.pendiente { background: var(--amarillo-fondo); color: var(--amarillo); border: 1px solid #f2d48a; }
+.estado.despachado { background: var(--azul-claro); color: var(--azul); border: 1px solid #b9d0ea; }
+.estado.entregado { background: var(--verde-fondo); color: var(--verde); border: 1px solid #a6dbb7; }
+.estado.anulado { background: #eceff2; color: #5d6d80; border: 1px solid #c9d1da; text-decoration: line-through; }
 
 .detalle dt { font-weight: 600; color: #4a5a6c; font-size: 13px; }
 .detalle dd { margin: 2px 0 12px; }
@@ -195,3 +200,20 @@ input, select, textarea { width: 100%; padding: 8px 10px; border: 1px solid var(
 .tarjeta-login { background: var(--blanco); border: 1px solid var(--borde); border-radius: var(--radio); padding: 28px 26px; width: 100%; max-width: 380px; }
 .tarjeta-login h1 { font-size: 20px; margin: 10px 0 2px; }
 .tarjeta-login .boton { width: 100%; }
+
+/* Formulario de pedido: tabla de líneas y total */
+.lineas-pedido { margin-bottom: 10px; }
+.lineas-pedido select { min-width: 260px; }
+.lineas-pedido input[type=number] { width: 110px; }
+.lineas-pedido td.subtotal { white-space: nowrap; }
+.total-pedido { font-size: 17px; font-weight: 600; margin: 12px 0 4px; text-align: right; }
+.presentacion { color: var(--texto-suave); font-size: 13px; }
+@media (max-width: 640px) {
+  .lineas-pedido, .lineas-pedido tbody, .lineas-pedido tr, .lineas-pedido td { display: block; width: 100%; }
+  .lineas-pedido thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+  .lineas-pedido tr { border: 1px solid var(--borde); border-radius: var(--radio); margin-bottom: 10px; padding: 6px 10px; }
+  .lineas-pedido td { border: 0; padding: 4px 0; }
+  .lineas-pedido select { min-width: 0; }
+  .lineas-pedido input[type=number] { width: 100%; }
+  .total-pedido { text-align: left; }
+}

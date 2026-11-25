@@ -1,0 +1,61 @@
+<%- include('../partials/encabezado', { titulo: 'Pedido N° ' + pedido.id_pedido }) %>
+    <nav class="migas" aria-label="Ubicación"><a href="/pedidos">Pedidos</a> / <span>Pedido N° <%= pedido.id_pedido %></span></nav>
+    <h1>Pedido N° <%= pedido.id_pedido %> <span class="estado <%= pedido.estado %>"><%= pedido.estado %></span></h1>
+    <p class="subtitulo">Detalle del pedido y acciones disponibles.</p>
+    <%- include('../partials/alerta', { mensaje, error }) %>
+    <div class="tarjeta">
+      <dl class="detalle">
+        <div><dt>Farmacia</dt><dd><%= pedido.farmacia %> (NIT <%= pedido.nit %>)</dd></div>
+        <div><dt>Fecha del pedido</dt><dd><%= pedido.fecha_pedido %></dd></div>
+        <div><dt>Registrado por</dt><dd><%= pedido.registrado_por %></dd></div>
+        <div><dt>Observación</dt><dd><%= pedido.observacion || 'Sin observación' %></dd></div>
+        <% if (pedido.fecha_despacho) { %><div><dt>Fecha de despacho</dt><dd><%= pedido.fecha_despacho %></dd></div><% } %>
+        <% if (pedido.fecha_entrega) { %><div><dt>Fecha de entrega</dt><dd><%= pedido.fecha_entrega %></dd></div><% } %>
+      </dl>
+    </div>
+
+    <% const pendiente = pedido.estado === 'pendiente'; %>
+    <table class="tabla-adaptable">
+      <caption class="oculto">Medicamentos del pedido</caption>
+      <thead>
+        <tr>
+          <th scope="col">Medicamento</th>
+          <th scope="col" class="numero">Cantidad</th>
+          <th scope="col" class="numero">Precio unitario (Bs)</th>
+          <th scope="col" class="numero">Subtotal (Bs)</th>
+          <% if (pendiente) { %><th scope="col" class="numero">Stock actual</th><% } %>
+        </tr>
+      </thead>
+      <tbody>
+      <% lineas.forEach(l => { %>
+      <tr>
+        <td data-label="Medicamento" class="principal"><%= l.nombre %> <span class="presentacion"><%= l.presentacion %></span></td>
+        <td data-label="Cantidad" class="numero"><%= l.cantidad %></td>
+        <td data-label="Precio unitario (Bs)" class="numero"><%= l.precio_unitario.toFixed(2) %></td>
+        <td data-label="Subtotal (Bs)" class="numero"><%= l.subtotal.toFixed(2) %></td>
+        <% if (pendiente) { %><td data-label="Stock actual" class="numero"><%= l.stock %><% if (l.stock < l.cantidad) { %> <span class="estado bajo">No alcanza</span><% } %></td><% } %>
+      </tr>
+      <% }) %>
+      </tbody>
+    </table>
+    <p class="total-pedido">Total: Bs <%= pedido.total.toFixed(2) %></p>
+
+    <div class="acciones">
+      <% if (pendiente && tieneRol(ROLES.ADMIN, ROLES.ALMACEN)) { %>
+      <form method="post" action="/pedidos/<%= pedido.id_pedido %>/despachar" data-confirmar="Se descontará del stock la cantidad de cada medicamento." data-confirmar-boton="Sí, despachar" data-cargando="Despachando...">
+        <button class="boton" type="submit">Despachar</button>
+      </form>
+      <% } %>
+      <% if (pedido.estado === 'despachado' && tieneRol(ROLES.ADMIN, ROLES.ALMACEN)) { %>
+      <form method="post" action="/pedidos/<%= pedido.id_pedido %>/entregar" data-confirmar="El pedido quedará marcado como entregado a la farmacia." data-confirmar-boton="Sí, entregar" data-cargando="Guardando...">
+        <button class="boton" type="submit">Marcar como entregado</button>
+      </form>
+      <% } %>
+      <% if (pendiente && tieneRol(ROLES.ADMIN, ROLES.VENTAS)) { %>
+      <form method="post" action="/pedidos/<%= pedido.id_pedido %>/anular" data-confirmar="El pedido quedará anulado y no se podrá despachar." data-confirmar-boton="Sí, anular" data-cargando="Anulando...">
+        <button class="boton peligro" type="submit">Anular pedido</button>
+      </form>
+      <% } %>
+      <a class="boton secundario" href="/pedidos">Volver al listado</a>
+    </div>
+<%- include('../partials/pie') %>
