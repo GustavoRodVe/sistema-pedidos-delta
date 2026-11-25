@@ -147,6 +147,34 @@ const Pedido = {
     }
   },
 
+  // Pedidos de un rango de fechas para el reporte, sin los anulados.
+  // La fecha hasta se compara con "< hasta + 1 día" para incluir todo ese último día
+  // (fecha_pedido tiene hora, y "<= hasta" dejaría fuera los pedidos de ese día después de las 00:00).
+  async reporte({ idFarmacia, desde, hasta }) {
+    let sql = `SELECT p.id_pedido, p.fecha_pedido, f.nombre AS farmacia, p.estado, p.total
+               FROM pedido p
+               INNER JOIN farmacia f ON f.id_farmacia = p.id_farmacia
+               WHERE p.estado <> 'anulado'
+                 AND p.fecha_pedido >= ?
+                 AND p.fecha_pedido < DATE_ADD(?, INTERVAL 1 DAY)`;
+    const params = [desde, hasta];
+    if (idFarmacia) {
+      sql += ' AND p.id_farmacia = ?';
+      params.push(idFarmacia);
+    }
+    sql += ' ORDER BY p.fecha_pedido';
+    const [filas] = await pool.query(sql, params);
+    return filas;
+  },
+
+  // Cantidad de pedidos por estado para el panel. Los estados sin pedidos quedan en 0.
+  async contarPorEstado() {
+    const [filas] = await pool.query('SELECT estado, COUNT(*) AS total FROM pedido GROUP BY estado');
+    const conteo = { pendiente: 0, despachado: 0, entregado: 0, anulado: 0 };
+    filas.forEach((f) => { conteo[f.estado] = f.total; });
+    return conteo;
+  },
+
   // El WHERE sobre el estado es lo que impide las transiciones inválidas: si el
   // pedido no está en el estado esperado, no se modifica ninguna fila (devuelve 0).
   async entregar(id) {

@@ -1,0 +1,35 @@
+<%- include('../partials/encabezado', { titulo: 'Categorías' }) %>
+    <h1>Categorías</h1>
+    <p class="subtitulo">Categorías del catálogo de medicamentos.</p>
+    <%- include('../partials/alerta', { mensaje }) %>
+    <% if (Object.keys(errores).length > 0) { %>
+    <div class="alerta error resumen-errores" role="alert">No se guardó la categoría. Revise los campos marcados en rojo.</div>
+    <% } %>
+    <section class="tarjeta">
+      <h2>Registrar categoría</h2>
+      <form method="post" action="/categorias" novalidate data-cargando="Guardando...">
+        <div class="fila">
+          <%- include('../partials/campo', { id: 'nombre', etiqueta: 'Nombre', valor: categoria.nombre, errores, obligatorio: true, atributos: 'maxlength="60"' }) %>
+          <%- include('../partials/campo', { id: 'descripcion', etiqueta: 'Descripción', valor: categoria.descripcion, errores, ayuda: 'Opcional. Máximo 150 caracteres.', atributos: 'maxlength="150"' }) %>
+        </div>
+        <div class="acciones">
+          <button class="boton" type="submit">Guardar categoría</button>
+        </div>
+      </form>
+    </section>
+    <table class="tabla-adaptable">
+      <caption class="oculto">Categorías registradas</caption>
+      <thead>
+        <tr><th scope="col">Nombre</th><th scope="col">Descripción</th></tr>
+      </thead>
+      <tbody>
+      <% categorias.forEach(c => { %>
+      <tr>
+        <td data-label="Nombre" class="principal"><%= c.nombre %></td>
+        <td data-label="Descripción"><%= c.descripcion || 'Sin descripción' %></td>
+      </tr>
+      <% }) %>
+      </tbody>
+    </table>
+    <div class="paginacion"><span><%= categorias.length %> categoría(s)</span></div>
+<%- include('../partials/pie') %>

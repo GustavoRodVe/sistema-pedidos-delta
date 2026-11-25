@@ -9,6 +9,9 @@ const sesionRoutes = require('./routes/sesionRoutes');
 const farmaciaRoutes = require('./routes/farmaciaRoutes');
 const medicamentoRoutes = require('./routes/medicamentoRoutes');
 const pedidoRoutes = require('./routes/pedidoRoutes');
+const usuarioRoutes = require('./routes/usuarioRoutes');
+const categoriaRoutes = require('./routes/categoriaRoutes');
+const reporteRoutes = require('./routes/reporteRoutes');
 const { inicioController } = require('./controllers/inicioController');
 
 const app = express();
@@ -75,6 +78,10 @@ app.get('/', inicioController.panel);
 app.use('/farmacias', permitirRoles(ROLES.ADMIN, ROLES.VENTAS), farmaciaRoutes);
 app.use('/medicamentos', medicamentoRoutes);
 app.use('/pedidos', pedidoRoutes);
+// Administración: solo el rol Administrador.
+app.use('/usuarios', permitirRoles(ROLES.ADMIN), usuarioRoutes);
+app.use('/categorias', permitirRoles(ROLES.ADMIN), categoriaRoutes);
+app.use('/reportes', permitirRoles(ROLES.ADMIN), reporteRoutes);
 
 // Ruta inexistente
 app.use((req, res) => {

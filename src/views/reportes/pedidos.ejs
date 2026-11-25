@@ -1,0 +1,45 @@
+<%- include('../partials/encabezado', { titulo: 'Reporte de pedidos' }) %>
+    <h1>Reporte de pedidos por farmacia</h1>
+    <p class="subtitulo">Pedidos registrados en un rango de fechas, de todas las farmacias o de una sola.</p>
+    <%- include('../partials/alerta', { mensaje: null, error }) %>
+    <div class="barra">
+      <form method="get" action="/reportes/pedidos" data-cargando="Generando el reporte...">
+        <label class="oculto" for="farmacia">Farmacia</label>
+        <select id="farmacia" name="farmacia">
+          <option value="">Todas las farmacias</option>
+          <% farmacias.forEach(f => { %><option value="<%= f.id_farmacia %>"<%= idFarmacia === f.id_farmacia ? ' selected' : '' %>><%= f.nombre %></option><% }) %>
+        </select>
+        <label for="desde">Desde</label>
+        <input type="date" id="desde" name="desde" value="<%= desde %>">
+        <label for="hasta">Hasta</label>
+        <input type="date" id="hasta" name="hasta" value="<%= hasta %>">
+        <button class="boton" type="submit">Generar reporte</button>
+      </form>
+    </div>
+    <p class="ayuda">Los pedidos anulados no se incluyen en el reporte ni en el total.</p>
+    <% if (!error) { %>
+      <% if (pedidos.length === 0) { %>
+        <div class="vacio-bloque"><p>No hay pedidos en el rango seleccionado.</p></div>
+      <% } else { %>
+      <table class="tabla-adaptable">
+        <caption class="oculto">Pedidos del rango seleccionado</caption>
+        <thead>
+          <tr><th scope="col">N°</th><th scope="col">Fecha</th><th scope="col">Farmacia</th><th scope="col">Estado</th><th scope="col" class="numero">Total (Bs)</th></tr>
+        </thead>
+        <tbody>
+        <% pedidos.forEach(p => { %>
+        <tr>
+          <td data-label="N°" class="principal"><a href="/pedidos/<%= p.id_pedido %>"><%= p.id_pedido %></a></td>
+          <td data-label="Fecha"><%= p.fecha_pedido %></td>
+          <td data-label="Farmacia"><%= p.farmacia %></td>
+          <td data-label="Estado"><span class="estado <%= p.estado %>"><%= p.estado %></span></td>
+          <td data-label="Total (Bs)" class="numero"><%= p.total.toFixed(2) %></td>
+        </tr>
+        <% }) %>
+        </tbody>
+      </table>
+      <p class="total-pedido">Total: Bs <%= total.toFixed(2) %></p>
+      <div class="paginacion"><span><%= pedidos.length %> pedido(s) en el rango</span></div>
+      <% } %>
+    <% } %>
+<%- include('../partials/pie') %>

@@ -28,6 +28,29 @@
       </div>
     </div>
 
+    <div class="tarjetas">
+      <a class="indicador" href="/pedidos?estado=pendiente">
+        <div class="valor"><%= pedidosPorEstado.pendiente %></div>
+        <div class="etiqueta">Pendientes</div>
+        <div class="texto">Esperan ser despachados</div>
+      </a>
+      <a class="indicador" href="/pedidos?estado=despachado">
+        <div class="valor"><%= pedidosPorEstado.despachado %></div>
+        <div class="etiqueta">Despachados</div>
+        <div class="texto">Salieron del almacén</div>
+      </a>
+      <a class="indicador" href="/pedidos?estado=entregado">
+        <div class="valor"><%= pedidosPorEstado.entregado %></div>
+        <div class="etiqueta">Entregados</div>
+        <div class="texto">Recibidos por la farmacia</div>
+      </a>
+      <a class="indicador" href="/pedidos?estado=anulado">
+        <div class="valor"><%= pedidosPorEstado.anulado %></div>
+        <div class="etiqueta">Anulados</div>
+        <div class="texto">Cancelados antes de despachar</div>
+      </a>
+    </div>
+
     <div class="columnas">
       <section class="tarjeta">
         <h2>Accesos rápidos</h2>
@@ -35,6 +58,9 @@
           <% if (tieneRol(ROLES.ADMIN, ROLES.VENTAS)) { %><a class="boton" href="/farmacias/nueva">Registrar farmacia</a><% } %>
           <% if (tieneRol(ROLES.ADMIN)) { %><a class="boton" href="/medicamentos/nuevo">Registrar medicamento</a><% } %>
           <% if (tieneRol(ROLES.ADMIN, ROLES.VENTAS)) { %><a class="boton secundario" href="/farmacias">Buscar farmacia</a><% } %>
+          <% if (tieneRol(ROLES.ADMIN, ROLES.VENTAS)) { %><a class="boton" href="/pedidos/nuevo">Registrar pedido</a><% } %>
+          <a class="boton secundario" href="/pedidos?estado=pendiente">Pedidos pendientes</a>
+          <% if (tieneRol(ROLES.ADMIN)) { %><a class="boton secundario" href="/reportes/pedidos">Reporte de pedidos</a><% } %>
           <a class="boton secundario" href="/medicamentos">Ver medicamentos</a>
         </div>
       </section>

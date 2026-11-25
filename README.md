@@ -12,18 +12,20 @@ El sistema cubre un solo proceso: la recepción y el seguimiento de los pedidos 
 
 ## Herramientas
 
-Node.js, Express, EJS, MySQL 8, Git y GitHub, draw.io y un prototipo en HTML y CSS. La tecnología está sujeta a la aprobación docente.
+Node.js, Express, EJS, MySQL 8, Git y GitHub, draw.io y un prototipo en HTML y CSS. Para el inicio de sesión se usan express-session (guarda la sesión del usuario) y bcryptjs (calcula y compara el hash de las contraseñas). La tecnología está sujeta a la aprobación docente.
 
 ## Estructura del repositorio
 
 - documentacion/: los textos de cada actividad en Markdown y los PDF entregados.
 - diagramas/: los diagramas en formato .drawio (editables) junto con su exportación en .png.
 - prototipos/: el prototipo navegable de las pantallas (abrir index.html).
-- database/: el script SQL de la base de datos.
+- database/: el script SQL de la base de datos (script_inicial.sql) y actividad6.sql, que agrega los usuarios de prueba a una base ya creada.
 - src/: la aplicación bajo MVC (config, models, controllers, routes, validators, views).
+- src/middlewares/: la sesión y los permisos por rol (requiereSesion y permitirRoles).
 - src/views/partials/: partes comunes de las pantallas (encabezado con menú, pie con el cuadro de confirmación, mensaje de éxito y el componente de campo de formulario).
 - public/css/estilos.css: estilos globales con los colores del prototipo guardados como variables.
 - public/js/app.js: comportamiento de la interfaz (menú en celular, validación en el navegador, estados de carga y confirmación).
+- public/js/pedidos.js: agregar y quitar líneas en el formulario de pedido y mostrar el total estimado.
 - public/img/: logotipo del sistema.
 - evidencias/: capturas y resultados de las pruebas de la Actividad 2 y del recorrido de la Actividad 3 (evidencias/actividad-3).
 
@@ -35,7 +37,8 @@ Pantallas implementadas:
 
 | Pantalla | Ruta |
 |---|---|
-| Panel principal | / |
+| Inicio de sesión | /login |
+| Panel principal (con pedidos por estado) | / |
 | Listado y búsqueda de farmacias | /farmacias, /farmacias?buscar=texto |
 | Registrar farmacia | /farmacias/nueva |
 | Detalle de farmacia | /farmacias/:id |
@@ -44,20 +47,61 @@ Pantallas implementadas:
 | Registrar medicamento | /medicamentos/nuevo |
 | Detalle de medicamento | /medicamentos/:id |
 | Editar medicamento | /medicamentos/:id/editar |
+| Listado y filtros de pedidos | /pedidos, /pedidos?estado=pendiente&farmacia=id |
+| Registrar pedido | /pedidos/nuevo |
+| Detalle de pedido (despachar, entregar, anular) | /pedidos/:id |
+| Usuarios (solo administrador) | /usuarios, /usuarios/nuevo |
+| Categorías (solo administrador) | /categorias |
+| Reporte de pedidos por farmacia (solo administrador) | /reportes/pedidos |
+| Acceso no permitido | cuando el rol no tiene permiso (403) |
 | Página no encontrada | cualquier otra ruta |
+
+## Usuarios de prueba y permisos
+
+El sistema pide iniciar sesión con correo y contraseña antes de mostrar cualquier pantalla. Hay un usuario de prueba por cada rol:
+
+| Rol | Correo |
+|---|---|
+| Administrador | admin@delta.test |
+| Ejecutivo de ventas | ventas@delta.test |
+| Encargado de almacén | almacen@delta.test |
+
+Los tres usan la misma contraseña ficticia de prueba, Delta2026. En la base solo se guarda su hash bcrypt, nunca la contraseña en texto. Esta contraseña hay que cambiarla antes de usar el sistema con datos reales.
+
+Cada rol ve en el menú solo lo que puede usar, y además el servidor responde con la página 403 si alguien escribe a mano una dirección que no le corresponde.
+
+| Rol | Qué puede hacer |
+|---|---|
+| Administrador | Todo: usuarios, categorías, medicamentos, farmacias, pedidos y el reporte |
+| Ejecutivo de ventas | Gestionar farmacias, ver medicamentos, registrar y anular pedidos y ver el listado de pedidos |
+| Encargado de almacén | Ver medicamentos y pedidos, despachar pedidos (descuenta el stock) y marcarlos como entregados |
+
+Un usuario desactivado ya no puede ingresar, aunque su fila se conserva porque puede figurar como quien registró pedidos. Un administrador no puede desactivarse a sí mismo.
+
+## Flujo de un pedido
+
+Un pedido nuevo queda pendiente y todavía no toca el stock. Al despacharlo, el sistema descuenta de golpe el stock de todos sus medicamentos; si alguno no alcanza, no se descuenta nada y se avisa cuáles faltan. Después se marca como entregado. Un pedido solo se puede anular mientras está pendiente. El precio de cada medicamento se toma de la base de datos al registrar el pedido, no del formulario.
 
 ## Cómo ejecutar
 
 1. Instalar Node.js y MySQL 8.
-2. Crear la base ejecutando database/script_inicial.sql en MySQL.
-3. Copiar .env.example como .env y completar los datos del usuario de la base.
-4. Instalar dependencias con npm install.
-5. Iniciar con npm start y abrir http://localhost:3000.
+2. Crear la base ejecutando database/script_inicial.sql en MySQL. Con una instalación nueva ya trae los tres usuarios de prueba.
+3. Si la base ya estaba creada de antes, ejecutar database/actividad6.sql para agregar los usuarios de prueba, por ejemplo con mysql -u delta_app -p delta_pedidos < database/actividad6.sql. Se puede correr más de una vez sin duplicar nada.
+4. Copiar .env.example como .env y completar los datos del usuario de la base.
+5. Instalar dependencias con npm install.
+6. Iniciar con npm start, abrir http://localhost:3000 e ingresar con alguno de los usuarios de prueba.
 
 La dirección del servidor y los datos de conexión se configuran solo en el archivo .env (PORT y DB_*), que no se sube al repositorio. En la consola se registra cada solicitud con su código de respuesta, lo que ayuda a comprobar que las acciones de la interfaz llegan al servidor.
+
+## Variables para el despliegue
+
+Para publicar la aplicación (por ejemplo en Render con una base MySQL en Aiven) se configuran variables de entorno en el servicio. NODE_ENV=production activa la cookie de sesión segura y la confianza en el proxy, y obliga a definir SESSION_SECRET, un texto largo y aleatorio con el que se firma la cookie; sin él la aplicación no arranca. Para la conexión cifrada a MySQL, DB_SSL=true verifica el certificado con el contenido de ca.pem en DB_CA (puede pegarse en una sola línea con \n entre líneas), y DB_SSL=sin-verificar cifra sin comprobar el certificado, algo menos seguro que solo sirve como plan B. Las sesiones viven en la memoria del servidor, así que se pierden al reiniciarlo; para este proyecto académico es aceptable.
 
 ## Estado
 
 - Actividad 1 (análisis y modelado): entregada.
 - Actividad 2 (CRUD de farmacias y medicamentos bajo MVC): entregada.
-- Actividad 3 (frontend de farmacias y medicamentos): entregada. Las pantallas de pedidos, inicio de sesión, usuarios, categorías y reportes quedan para las siguientes entregas.
+- Actividad 3 (frontend de farmacias y medicamentos): entregada.
+- Actividad 4 (pruebas y despliegue): entregada.
+- Actividad 5 (examen práctico): realizada.
+- Actividad 6 (proyecto terminado): inicio de sesión con roles, usuarios, categorías, pedidos con despacho y control de stock, y reporte de pedidos por farmacia.

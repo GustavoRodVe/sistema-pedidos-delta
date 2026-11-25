@@ -1,0 +1,25 @@
+<%- include('../partials/encabezado', { titulo: 'Registrar usuario' }) %>
+    <nav class="migas" aria-label="Ubicación"><a href="/usuarios">Usuarios</a> / <span>Nuevo usuario</span></nav>
+    <h1>Registrar usuario</h1>
+    <p class="subtitulo">Los campos marcados con <span class="obligatorio">*</span> son obligatorios.</p>
+    <% if (Object.keys(errores).length > 0) { %>
+    <div class="alerta error resumen-errores" role="alert">No se guardó el usuario. Revise los campos marcados en rojo.</div>
+    <% } %>
+    <div class="tarjeta">
+      <%# Sin data-validar: este formulario se valida solo en el servidor. %>
+      <form method="post" action="/usuarios" novalidate data-cargando="Guardando...">
+        <div class="fila">
+          <%- include('../partials/campo', { id: 'nombre_completo', etiqueta: 'Nombre completo', valor: datosUsuario.nombre_completo, errores, obligatorio: true, atributos: 'maxlength="100" autocomplete="off"' }) %>
+          <%- include('../partials/campo', { id: 'correo', etiqueta: 'Correo', valor: datosUsuario.correo, errores, obligatorio: true, atributos: 'type="email" maxlength="100" autocomplete="off"' }) %>
+        </div>
+        <div class="fila">
+          <%- include('../partials/campo', { id: 'clave', etiqueta: 'Contraseña', valor: '', errores, obligatorio: true, ayuda: 'Mínimo 8 caracteres.', atributos: 'type="password" minlength="8" maxlength="72" autocomplete="new-password"' }) %>
+          <%- include('../partials/campo', { id: 'id_rol', etiqueta: 'Rol', valor: datosUsuario.id_rol, errores, obligatorio: true, opciones: roles.map(r => ({ valor: r.id_rol, texto: r.nombre })) }) %>
+        </div>
+        <div class="acciones">
+          <button class="boton" type="submit">Guardar</button>
+          <a class="boton secundario" href="/usuarios">Cancelar</a>
+        </div>
+      </form>
+    </div>
+<%- include('../partials/pie') %>

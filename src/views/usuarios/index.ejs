@@ -1,0 +1,33 @@
+<%- include('../partials/encabezado', { titulo: 'Usuarios' }) %>
+    <h1>Usuarios</h1>
+    <p class="subtitulo">Personas que pueden ingresar al sistema y el rol de cada una.</p>
+    <%- include('../partials/alerta', { mensaje, error }) %>
+    <div class="barra">
+      <span></span>
+      <a class="boton" href="/usuarios/nuevo">Nuevo usuario</a>
+    </div>
+    <table class="tabla-adaptable">
+      <caption class="oculto">Listado de usuarios</caption>
+      <thead>
+        <tr><th scope="col">Nombre</th><th scope="col">Correo</th><th scope="col">Rol</th><th scope="col">Estado</th><th scope="col">Acciones</th></tr>
+      </thead>
+      <tbody>
+      <% usuarios.forEach(u => { %>
+      <tr>
+        <td data-label="Nombre" class="principal"><%= u.nombre_completo %></td>
+        <td data-label="Correo"><%= u.correo %></td>
+        <td data-label="Rol"><%= u.rol %></td>
+        <td data-label="Estado"><% if (u.activo) { %><span class="estado entregado">Activo</span><% } else { %><span class="estado anulado">Inactivo</span><% } %></td>
+        <td data-label="Acciones" class="acciones">
+          <% if (u.activo && u.id_usuario !== usuario.id_usuario) { %>
+          <form method="post" action="/usuarios/<%= u.id_usuario %>/desactivar" data-confirmar="El usuario ya no podrá ingresar al sistema." data-cargando="Desactivando...">
+            <button class="boton chico peligro" type="submit" aria-label="Desactivar a <%= u.nombre_completo %>">Desactivar</button>
+          </form>
+          <% } %>
+        </td>
+      </tr>
+      <% }) %>
+      </tbody>
+    </table>
+    <div class="paginacion"><span><%= usuarios.length %> usuario(s)</span></div>
+<%- include('../partials/pie') %>

@@ -38,6 +38,12 @@
     <a href="/pedidos"<%- rutaActual.startsWith('/pedidos') ? ' class="activo" aria-current="page"' : '' %>>Pedidos</a>
     <div class="grupo">Catálogo</div>
     <a href="/medicamentos"<%- rutaActual.startsWith('/medicamentos') ? ' class="activo" aria-current="page"' : '' %>>Medicamentos</a>
+    <% if (tieneRol(ROLES.ADMIN)) { %>
+    <a href="/categorias"<%- rutaActual.startsWith('/categorias') ? ' class="activo" aria-current="page"' : '' %>>Categorías</a>
+    <div class="grupo">Administración</div>
+    <a href="/usuarios"<%- rutaActual.startsWith('/usuarios') ? ' class="activo" aria-current="page"' : '' %>>Usuarios</a>
+    <a href="/reportes/pedidos"<%- rutaActual.startsWith('/reportes') ? ' class="activo" aria-current="page"' : '' %>>Reporte de pedidos</a>
+    <% } %>
   </nav>
   <% } %>
   <main class="contenido" id="contenido" tabindex="-1">
