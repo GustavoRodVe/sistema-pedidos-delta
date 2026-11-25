@@ -6,13 +6,15 @@ Laboratorio Químico Delta es una empresa ficticia creada solo para este trabajo
 
 Estudiante: Gustavo Rodríguez Vélez
 
+Sistema desplegado: https://pedidos-delta.onrender.com. Está en el plan gratuito de Render, que se duerme cuando no se usa, así que la primera visita puede tardar cerca de un minuto en responder. Se puede ingresar con los usuarios de prueba que aparecen más abajo (admin@delta.test, ventas@delta.test y almacen@delta.test).
+
 ## Alcance
 
 El sistema cubre un solo proceso: la recepción y el seguimiento de los pedidos mayoristas. Incluye farmacias, el catálogo de medicamentos por categorías, pedidos con su detalle y estado, usuarios con roles y el descuento de stock al despachar. No incluye contabilidad, facturación, producción, lotes ni pagos en línea.
 
 ## Herramientas
 
-Node.js, Express, EJS, MySQL 8, Git y GitHub, draw.io y un prototipo en HTML y CSS. Para el inicio de sesión se usan express-session (guarda la sesión del usuario) y bcryptjs (calcula y compara el hash de las contraseñas). La tecnología está sujeta a la aprobación docente.
+Node.js, Express, EJS, MySQL 8.4, Git y GitHub, draw.io y un prototipo en HTML y CSS. Para el inicio de sesión se usan express-session (guarda la sesión del usuario) y bcryptjs (calcula y compara el hash de las contraseñas).
 
 ## Estructura del repositorio
 
@@ -27,7 +29,9 @@ Node.js, Express, EJS, MySQL 8, Git y GitHub, draw.io y un prototipo en HTML y C
 - public/js/app.js: comportamiento de la interfaz (menú en celular, validación en el navegador, estados de carga y confirmación).
 - public/js/pedidos.js: agregar y quitar líneas en el formulario de pedido y mostrar el total estimado.
 - public/img/: logotipo del sistema.
-- evidencias/: capturas y resultados de las pruebas de la Actividad 2 y del recorrido de la Actividad 3 (evidencias/actividad-3).
+- pruebas/: pruebas-act6.cjs es el plan de pruebas actual (casos funcionales y de integración, en local y contra el sistema desplegado), capturas-act6.cjs hace el recorrido con capturas y servidor-local.cjs arranca la aplicación para ambos. pruebas-act4.cjs se conserva como historial: se hizo antes del inicio de sesión y ya no se puede usar tal cual.
+- evidencias/: capturas y resultados de las pruebas de la Actividad 2, del recorrido de la Actividad 3 (evidencias/actividad-3) y de la Actividad 6 (evidencias/actividad-6, con las capturas, los resultados en JSON y Markdown y la salida de la terminal).
+- documentacion/actividad-6/: el documento final de la Actividad 6 en Markdown y el PDF entregado.
 
 ## Arquitectura del frontend
 
@@ -91,11 +95,13 @@ Un pedido nuevo queda pendiente y todavía no toca el stock. Al despacharlo, el 
 5. Instalar dependencias con npm install.
 6. Iniciar con npm start, abrir http://localhost:3000 e ingresar con alguno de los usuarios de prueba.
 
+Para repetir las pruebas hace falta MySQL encendido con la base creada: node pruebas/pruebas-act6.cjs arranca la aplicación en el puerto 3100, ejecuta los 32 casos y escribe los resultados en evidencias/actividad-6. Los casos contra el sistema desplegado necesitan además un archivo JSON con los datos de la base en la nube (variable DELTA_AIVEN_JSON), que no está en el repositorio. Las capturas se vuelven a generar con node pruebas/capturas-act6.cjs, que usa Playwright instalado de forma global.
+
 La dirección del servidor y los datos de conexión se configuran solo en el archivo .env (PORT y DB_*), que no se sube al repositorio. En la consola se registra cada solicitud con su código de respuesta, lo que ayuda a comprobar que las acciones de la interfaz llegan al servidor.
 
 ## Variables para el despliegue
 
-Para publicar la aplicación (por ejemplo en Render con una base MySQL en Aiven) se configuran variables de entorno en el servicio. NODE_ENV=production activa la cookie de sesión segura y la confianza en el proxy, y obliga a definir SESSION_SECRET, un texto largo y aleatorio con el que se firma la cookie; sin él la aplicación no arranca. Para la conexión cifrada a MySQL, DB_SSL=true verifica el certificado con el contenido de ca.pem en DB_CA (puede pegarse en una sola línea con \n entre líneas), y DB_SSL=sin-verificar cifra sin comprobar el certificado, algo menos seguro que solo sirve como plan B. Las sesiones viven en la memoria del servidor, así que se pierden al reiniciarlo; para este proyecto académico es aceptable.
+La aplicación está publicada en Render (servicio web con el plan gratuito, instalación con npm ci --omit=dev e inicio con npm start) y usa una base MySQL 8.4 en Aiven. En el servicio se configuran las variables NODE_ENV, SESSION_SECRET, DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME, DB_SSL y DB_CA; sus valores no se guardan en el repositorio. La aplicación se conecta con un usuario que solo tiene SELECT, INSERT, UPDATE y DELETE sobre la base. NODE_ENV=production activa la cookie de sesión segura y la confianza en el proxy, y obliga a definir SESSION_SECRET, un texto largo y aleatorio con el que se firma la cookie; sin él la aplicación no arranca. Para la conexión cifrada a MySQL, DB_SSL=true verifica el certificado con el contenido de ca.pem en DB_CA (puede pegarse en una sola línea con \n entre líneas), y DB_SSL=sin-verificar cifra sin comprobar el certificado, algo menos seguro que solo sirve como plan B. Las sesiones viven en la memoria del servidor, así que se pierden al reiniciarlo; para este proyecto académico es aceptable.
 
 ## Estado
 
@@ -104,4 +110,4 @@ Para publicar la aplicación (por ejemplo en Render con una base MySQL en Aiven)
 - Actividad 3 (frontend de farmacias y medicamentos): entregada.
 - Actividad 4 (pruebas y despliegue): entregada.
 - Actividad 5 (examen práctico): realizada.
-- Actividad 6 (proyecto terminado): inicio de sesión con roles, usuarios, categorías, pedidos con despacho y control de stock, y reporte de pedidos por farmacia.
+- Actividad 6 (proyecto terminado): terminada. Inicio de sesión con roles, usuarios, categorías, pedidos con despacho y control de stock, reporte de pedidos por farmacia, plan de pruebas de 32 casos y despliegue en Render con la base en Aiven.
