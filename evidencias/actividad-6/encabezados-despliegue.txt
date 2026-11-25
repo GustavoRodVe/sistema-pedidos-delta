@@ -3,13 +3,13 @@ Respuesta: 200
 
 alt-svc: h3=":443"; ma=86400
 cf-cache-status: DYNAMIC
-cf-ray: a5fdd5668a2f8baa-LPB
+cf-ray: a5fde1fd5fc58bb2-LPB
 content-encoding: br
 content-length: 499
 content-type: text/html; charset=utf-8
-date: Wed, 25 Nov 2026 04:15:40 GMT
+date: Wed, 25 Nov 2026 04:24:16 GMT
 etag: W/"45c-ojyBIl0JZlkmkqmVwkBRQt0sluE"
-rndr-id: 3ced4be9-eff1-4d53
+rndr-id: 38a4814e-ab91-40f2
 server: cloudflare
 vary: Accept-Encoding
 x-powered-by: Express

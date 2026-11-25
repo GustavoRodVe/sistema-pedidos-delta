@@ -1,13 +1,40 @@
-Plan de pruebas de la Actividad 6 - 2026-11-25T04:15:43.098Z
-Node v26.13.0, sufijo de la ejecución 0143098
+Plan de pruebas de la Actividad 6 - 2026-11-25T04:24:18.750Z
+Node v26.13.0, sufijo de la ejecución 0658750
 Servidor local: http://localhost:3100
 Sistema desplegado: https://pedidos-delta.onrender.com
 
 PF-01 OK    [Local] Acceso sin sesión -> 302 hacia /login
+PF-02 OK    [Local] Inicio de sesión con clave incorrecta -> 401, mensaje genérico: sí; luego GET /: 302 hacia /login
 PF-03 OK    [Local] Inicio de sesión de los tres roles -> Administrador: 302 y 200; Ejecutivo de ventas: 302 y 200; Encargado de almacén: 302 y 200
-PI-03 OK    [Local] Pedido de dos líneas con el total calculado en el servidor (se envió precio_unitario=0.01 y total=1) -> 302 hacia /pedidos/4; total 53.50 (suma SQL 53.50), usuario de la sesión: sí, estado pendiente, stock 50 y 20
-PI-09 OK    [Desplegado] El sistema desplegado responde por HTTPS desde Internet -> 200 por HTTPS; la primera respuesta tardó 1 s (arranque en frío)
+PF-04 OK    [Local] Cerrar sesión -> 302 hacia /login; con la cookie vieja GET /: 302 hacia /login
+PF-05 OK    [Local] Permisos por rol en el servidor -> almacén GET /farmacias: 403; ventas GET /usuarios: 403; ventas GET /categorias: 403; ventas GET /reportes/pedidos: 403; ventas GET /medicamentos/nuevo: 403; almacén POST /pedidos: 403
+PF-06 OK    [Local] Registrar una farmacia con datos válidos (ventas) -> 302 hacia /farmacias?ok=registrada
+PF-07 OK    [Local] Farmacia con NIT con letras y con zona fuera de la lista -> NIT con letras: 422, mensaje sí; zona Marte: 422, mensaje sí
+PF-08 OK    [Local] NIT repetido de una farmacia activa -> 409, mensaje: sí
+PF-09 OK    [Local] Registrar de nuevo el NIT de una farmacia desactivada (regresión del ERR-01) -> desactivar: 302, activo = 0; registrar otra vez: 302 /farmacias?ok=reactivada, activo = 1
+PF-10 OK    [Local] Registrar medicamentos (administrador): válido, precio 0 y stock negativo -> válido: 302; precio 0: 422; stock negativo: 422
+PF-11 OK    [Local] Registrar categorías (administrador): nueva y repetida -> nueva: 302 /categorias?ok=registrada; repetida: 409
+PF-12 OK    [Local] Registrar usuarios (administrador): clave corta y correo repetido -> clave corta: 422, mensaje sí; correo repetido: 409
+PF-13 OK    [Local] Un usuario desactivado ya no inicia sesión -> alta: 302; ingreso: 302; desactivar: 302; ingreso después: 401
+PF-14 OK    [Local] El administrador no puede desactivarse a sí mismo -> 302 /usuarios?error=propio; activo = 1
+PF-15 OK    [Local] Pedido inválido: sin líneas, cantidad 0 y medicamento repetido -> sin líneas: 422; cantidad 0: 422; repetido: 422; pedidos antes 0, después 0
+PF-16 OK    [Local] Transiciones de estado no permitidas -> despachar: 302 y 409; entregar: 302; anular entregado: 409, mensaje legible: sí
+PF-17 OK    [Local] Reporte con fechas inválidas -> 2026-02-30: 422; desde posterior a hasta: 422
+PF-18 OK    [Local] Salida escapada y rutas inválidas -> escapado: sí; /no-existe: 404; /pedidos/abc: 404
+PI-01 OK    [Local] La contraseña se guarda como hash -> empieza con $2b$, 60 caracteres, distinto de la contraseña: sí
+PI-02 OK    [Local] Farmacia guardada y datos rechazados fuera de la base -> fila con los datos enviados: sí; filas de los NIT rechazados: 0
+PI-03 OK    [Local] Pedido de dos líneas con el total calculado en el servidor (se envió precio_unitario=0.01 y total=1) -> 302 hacia /pedidos/14; total 53.50 (suma SQL 53.50), usuario de la sesión: sí, estado pendiente, stock 49->49 y 20->20
+PI-04 OK    [Local] Despacho con stock insuficiente -> 409, nombra el medicamento: sí, estado pendiente, stock 49->49 y 20->20
+PI-05 OK    [Local] Despacho correcto descuenta el stock -> 302, estado despachado, fecha de despacho registrada, stock 49->46 y 20->18
+PI-06 OK    [Local] Entrega y anulación de pedidos -> entregar: 302, estado entregado, fecha de entrega registrada; anular: 302, estado anulado, stock 18->18
+PI-07 OK    [Local] El total del reporte coincide con la base -> 200, total en pantalla Bs 12561.50, suma en MySQL Bs 12561.50, 3 pedidos, anulado excluido: sí
+PI-08 OK    [Local] El listado de medicamentos muestra cada uno con su categoría -> 200, medicamento y categoría visibles: sí
+PI-09 OK    [Desplegado] El sistema desplegado responde por HTTPS desde Internet -> 200 por HTTPS; tiempo hasta la primera respuesta: 0 s
+PI-10 OK    [Desplegado] Sesión en producción con cookie segura -> 302; Secure: sí, HttpOnly: sí; GET /: 200
+PI-11 OK    [Desplegado] Permisos en la nube -> sin sesión: 302 hacia /login; almacén en /farmacias: 403
+PI-12 OK    [Desplegado] Un registro hecho desde Internet llega a la base de Aiven -> 302, filas en Aiven: 1
+PI-13 OK    [Desplegado] El reporte en la nube coincide con la base de Aiven -> pedido de prueba: 302; reporte: 200, total en pantalla Bs 35.00, suma en Aiven Bs 35.00, 1 pedido(s) en el rango
 PI-14 OK    [Desplegado] Mínimo privilegio del usuario de la aplicación en la nube -> SELECT, INSERT, UPDATE, DELETE sobre delta_pedidos
 
 Limpieza: registros de prueba que quedan en la base local: 0, en la base de la nube: 0
-5/5 casos correctos (4 s)
+32/32 casos correctos (7 s)

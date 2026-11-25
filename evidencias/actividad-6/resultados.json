@@ -1,5 +1,5 @@
 {
-  "fecha": "2026-11-25T04:15:46.712Z",
+  "fecha": "2026-11-25T04:24:25.931Z",
   "node": "v26.13.0",
   "local": "http://localhost:3100",
   "publica": "https://pedidos-delta.onrender.com",
@@ -18,6 +18,15 @@
       "estado": "Correcto"
     },
     {
+      "id": "PF-02",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Inicio de sesión con clave incorrecta",
+      "esperado": "401 con el mensaje genérico y sin sesión abierta (GET / redirige a /login)",
+      "obtenido": "401, mensaje genérico: sí; luego GET /: 302 hacia /login",
+      "estado": "Correcto"
+    },
+    {
       "id": "PF-03",
       "tipo": "Funcional",
       "entorno": "Local",
@@ -27,12 +36,210 @@
       "estado": "Correcto"
     },
     {
+      "id": "PF-04",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Cerrar sesión",
+      "esperado": "302 hacia /login y la cookie anterior deja de servir",
+      "obtenido": "302 hacia /login; con la cookie vieja GET /: 302 hacia /login",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-05",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Permisos por rol en el servidor",
+      "esperado": "Las seis solicitudes fuera del rol responden 403",
+      "obtenido": "almacén GET /farmacias: 403; ventas GET /usuarios: 403; ventas GET /categorias: 403; ventas GET /reportes/pedidos: 403; ventas GET /medicamentos/nuevo: 403; almacén POST /pedidos: 403",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-06",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Registrar una farmacia con datos válidos (ventas)",
+      "esperado": "302 hacia /farmacias?ok=registrada",
+      "obtenido": "302 hacia /farmacias?ok=registrada",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-07",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Farmacia con NIT con letras y con zona fuera de la lista",
+      "esperado": "422 con el mensaje de cada campo",
+      "obtenido": "NIT con letras: 422, mensaje sí; zona Marte: 422, mensaje sí",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-08",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "NIT repetido de una farmacia activa",
+      "esperado": "409 con el mensaje de NIT ya registrado",
+      "obtenido": "409, mensaje: sí",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-09",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Registrar de nuevo el NIT de una farmacia desactivada (regresión del ERR-01)",
+      "esperado": "Desactivar deja activo = 0 y volver a registrar el NIT redirige con ok=reactivada y activo = 1",
+      "obtenido": "desactivar: 302, activo = 0; registrar otra vez: 302 /farmacias?ok=reactivada, activo = 1",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-10",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Registrar medicamentos (administrador): válido, precio 0 y stock negativo",
+      "esperado": "Válido 302; precio 0 y stock negativo 422 con su mensaje",
+      "obtenido": "válido: 302; precio 0: 422; stock negativo: 422",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-11",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Registrar categorías (administrador): nueva y repetida",
+      "esperado": "Nueva 302 con ok=registrada; repetida 409",
+      "obtenido": "nueva: 302 /categorias?ok=registrada; repetida: 409",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-12",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Registrar usuarios (administrador): clave corta y correo repetido",
+      "esperado": "Clave de 5 caracteres 422; correo repetido 409",
+      "obtenido": "clave corta: 422, mensaje sí; correo repetido: 409",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-13",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Un usuario desactivado ya no inicia sesión",
+      "esperado": "Antes de desactivarlo 302; después 401",
+      "obtenido": "alta: 302; ingreso: 302; desactivar: 302; ingreso después: 401",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-14",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "El administrador no puede desactivarse a sí mismo",
+      "esperado": "Redirección con error=propio y activo sigue en 1",
+      "obtenido": "302 /usuarios?error=propio; activo = 1",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-15",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Pedido inválido: sin líneas, cantidad 0 y medicamento repetido",
+      "esperado": "Los tres responden 422 y no se crea ningún pedido",
+      "obtenido": "sin líneas: 422; cantidad 0: 422; repetido: 422; pedidos antes 0, después 0",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-16",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Transiciones de estado no permitidas",
+      "esperado": "Despachar dos veces: la segunda 409; anular un pedido entregado: 409 con mensaje legible",
+      "obtenido": "despachar: 302 y 409; entregar: 302; anular entregado: 409, mensaje legible: sí",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-17",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Reporte con fechas inválidas",
+      "esperado": "422 para una fecha inexistente y para un rango al revés",
+      "obtenido": "2026-02-30: 422; desde posterior a hasta: 422",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-18",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Salida escapada y rutas inválidas",
+      "esperado": "El nombre con etiqueta script se muestra como texto; /no-existe y /pedidos/abc dan 404",
+      "obtenido": "escapado: sí; /no-existe: 404; /pedidos/abc: 404",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-01",
+      "tipo": "Integración",
+      "entorno": "Local",
+      "caso": "La contraseña se guarda como hash",
+      "esperado": "Hash bcrypt (empieza con $2, 60 caracteres) distinto de la contraseña enviada",
+      "obtenido": "empieza con $2b$, 60 caracteres, distinto de la contraseña: sí",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-02",
+      "tipo": "Integración",
+      "entorno": "Local",
+      "caso": "Farmacia guardada y datos rechazados fuera de la base",
+      "esperado": "La fila tiene los datos enviados y los NIT rechazados tienen 0 filas",
+      "obtenido": "fila con los datos enviados: sí; filas de los NIT rechazados: 0",
+      "estado": "Correcto"
+    },
+    {
       "id": "PI-03",
       "tipo": "Integración",
       "entorno": "Local",
       "caso": "Pedido de dos líneas con el total calculado en el servidor (se envió precio_unitario=0.01 y total=1)",
       "esperado": "Redirección al pedido; total = suma de cantidad x precio de la base; usuario de la sesión; estado pendiente; stock sin cambios",
-      "obtenido": "302 hacia /pedidos/4; total 53.50 (suma SQL 53.50), usuario de la sesión: sí, estado pendiente, stock 50 y 20",
+      "obtenido": "302 hacia /pedidos/14; total 53.50 (suma SQL 53.50), usuario de la sesión: sí, estado pendiente, stock 49->49 y 20->20",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-04",
+      "tipo": "Integración",
+      "entorno": "Local",
+      "caso": "Despacho con stock insuficiente",
+      "esperado": "409 que nombra el medicamento, estado pendiente y stock de las dos líneas sin cambios (rollback)",
+      "obtenido": "409, nombra el medicamento: sí, estado pendiente, stock 49->49 y 20->20",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-05",
+      "tipo": "Integración",
+      "entorno": "Local",
+      "caso": "Despacho correcto descuenta el stock",
+      "esperado": "Estado despachado, fecha de despacho y stock menos 3 y menos 2",
+      "obtenido": "302, estado despachado, fecha de despacho registrada, stock 49->46 y 20->18",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-06",
+      "tipo": "Integración",
+      "entorno": "Local",
+      "caso": "Entrega y anulación de pedidos",
+      "esperado": "Entregado con fecha de entrega; un pendiente anulado queda anulado con el stock sin cambios",
+      "obtenido": "entregar: 302, estado entregado, fecha de entrega registrada; anular: 302, estado anulado, stock 18->18",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-07",
+      "tipo": "Integración",
+      "entorno": "Local",
+      "caso": "El total del reporte coincide con la base",
+      "esperado": "Total en pantalla igual a SUM(total) de MySQL sin contar los anulados",
+      "obtenido": "200, total en pantalla Bs 12561.50, suma en MySQL Bs 12561.50, 3 pedidos, anulado excluido: sí",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-08",
+      "tipo": "Integración",
+      "entorno": "Local",
+      "caso": "El listado de medicamentos muestra cada uno con su categoría",
+      "esperado": "El medicamento de prueba aparece con el nombre de su categoría",
+      "obtenido": "200, medicamento y categoría visibles: sí",
       "estado": "Correcto"
     },
     {
@@ -41,7 +248,43 @@
       "entorno": "Desplegado",
       "caso": "El sistema desplegado responde por HTTPS desde Internet",
       "esperado": "200 en https://pedidos-delta.onrender.com/login",
-      "obtenido": "200 por HTTPS; la primera respuesta tardó 1 s (arranque en frío)",
+      "obtenido": "200 por HTTPS; tiempo hasta la primera respuesta: 0 s",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-10",
+      "tipo": "Integración",
+      "entorno": "Desplegado",
+      "caso": "Sesión en producción con cookie segura",
+      "esperado": "302 al ingresar, cookie con Secure y HttpOnly, y GET / con 200",
+      "obtenido": "302; Secure: sí, HttpOnly: sí; GET /: 200",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-11",
+      "tipo": "Integración",
+      "entorno": "Desplegado",
+      "caso": "Permisos en la nube",
+      "esperado": "Sin sesión 302 hacia /login; almacén en /farmacias 403",
+      "obtenido": "sin sesión: 302 hacia /login; almacén en /farmacias: 403",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-12",
+      "tipo": "Integración",
+      "entorno": "Desplegado",
+      "caso": "Un registro hecho desde Internet llega a la base de Aiven",
+      "esperado": "302 y exactamente 1 fila en Aiven (consulta por TLS)",
+      "obtenido": "302, filas en Aiven: 1",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-13",
+      "tipo": "Integración",
+      "entorno": "Desplegado",
+      "caso": "El reporte en la nube coincide con la base de Aiven",
+      "esperado": "Total en pantalla igual a SUM(total) de Aiven para el mes en curso, con el pedido de prueba incluido",
+      "obtenido": "pedido de prueba: 302; reporte: 200, total en pantalla Bs 35.00, suma en Aiven Bs 35.00, 1 pedido(s) en el rango",
       "estado": "Correcto"
     },
     {
