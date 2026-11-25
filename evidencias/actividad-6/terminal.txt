@@ -1,0 +1,13 @@
+Plan de pruebas de la Actividad 6 - 2026-11-25T04:15:43.098Z
+Node v26.13.0, sufijo de la ejecución 0143098
+Servidor local: http://localhost:3100
+Sistema desplegado: https://pedidos-delta.onrender.com
+
+PF-01 OK    [Local] Acceso sin sesión -> 302 hacia /login
+PF-03 OK    [Local] Inicio de sesión de los tres roles -> Administrador: 302 y 200; Ejecutivo de ventas: 302 y 200; Encargado de almacén: 302 y 200
+PI-03 OK    [Local] Pedido de dos líneas con el total calculado en el servidor (se envió precio_unitario=0.01 y total=1) -> 302 hacia /pedidos/4; total 53.50 (suma SQL 53.50), usuario de la sesión: sí, estado pendiente, stock 50 y 20
+PI-09 OK    [Desplegado] El sistema desplegado responde por HTTPS desde Internet -> 200 por HTTPS; la primera respuesta tardó 1 s (arranque en frío)
+PI-14 OK    [Desplegado] Mínimo privilegio del usuario de la aplicación en la nube -> SELECT, INSERT, UPDATE, DELETE sobre delta_pedidos
+
+Limpieza: registros de prueba que quedan en la base local: 0, en la base de la nube: 0
+5/5 casos correctos (4 s)

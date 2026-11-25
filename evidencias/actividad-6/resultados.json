@@ -1,0 +1,57 @@
+{
+  "fecha": "2026-11-25T04:15:46.712Z",
+  "node": "v26.13.0",
+  "local": "http://localhost:3100",
+  "publica": "https://pedidos-delta.onrender.com",
+  "limpieza": {
+    "local": 0,
+    "nube": 0
+  },
+  "resultados": [
+    {
+      "id": "PF-01",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Acceso sin sesión",
+      "esperado": "Redirección 302 hacia /login",
+      "obtenido": "302 hacia /login",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PF-03",
+      "tipo": "Funcional",
+      "entorno": "Local",
+      "caso": "Inicio de sesión de los tres roles",
+      "esperado": "Cada rol: 302 hacia / y el panel (200) muestra su rol",
+      "obtenido": "Administrador: 302 y 200; Ejecutivo de ventas: 302 y 200; Encargado de almacén: 302 y 200",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-03",
+      "tipo": "Integración",
+      "entorno": "Local",
+      "caso": "Pedido de dos líneas con el total calculado en el servidor (se envió precio_unitario=0.01 y total=1)",
+      "esperado": "Redirección al pedido; total = suma de cantidad x precio de la base; usuario de la sesión; estado pendiente; stock sin cambios",
+      "obtenido": "302 hacia /pedidos/4; total 53.50 (suma SQL 53.50), usuario de la sesión: sí, estado pendiente, stock 50 y 20",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-09",
+      "tipo": "Integración",
+      "entorno": "Desplegado",
+      "caso": "El sistema desplegado responde por HTTPS desde Internet",
+      "esperado": "200 en https://pedidos-delta.onrender.com/login",
+      "obtenido": "200 por HTTPS; la primera respuesta tardó 1 s (arranque en frío)",
+      "estado": "Correcto"
+    },
+    {
+      "id": "PI-14",
+      "tipo": "Integración",
+      "entorno": "Desplegado",
+      "caso": "Mínimo privilegio del usuario de la aplicación en la nube",
+      "esperado": "Solo SELECT, INSERT, UPDATE y DELETE sobre delta_pedidos",
+      "obtenido": "SELECT, INSERT, UPDATE, DELETE sobre delta_pedidos",
+      "estado": "Correcto"
+    }
+  ]
+}

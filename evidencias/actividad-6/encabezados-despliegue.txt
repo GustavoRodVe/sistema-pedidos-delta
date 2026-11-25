@@ -1,0 +1,16 @@
+Solicitud: GET https://pedidos-delta.onrender.com/login
+Respuesta: 200
+
+alt-svc: h3=":443"; ma=86400
+cf-cache-status: DYNAMIC
+cf-ray: a5fdd5668a2f8baa-LPB
+content-encoding: br
+content-length: 499
+content-type: text/html; charset=utf-8
+date: Wed, 25 Nov 2026 04:15:40 GMT
+etag: W/"45c-ojyBIl0JZlkmkqmVwkBRQt0sluE"
+rndr-id: 3ced4be9-eff1-4d53
+server: cloudflare
+vary: Accept-Encoding
+x-powered-by: Express
+x-render-origin-server: Render
